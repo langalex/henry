@@ -12,6 +12,7 @@ import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 import { randomUUID } from 'crypto';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const currentUser = requireAuth({ locals } as any);
@@ -119,6 +120,11 @@ export const actions: Actions = {
 
 		try {
 			await db.update(event).set({ title, description, date, time }).where(eq(event.id, params.id));
+			await logAuditEvent({ request, locals } as any, 'update', {
+				resourceType: 'event',
+				resourceId: params.id,
+				details: { title, date, time }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Aktualisieren des Events' });
@@ -138,7 +144,13 @@ export const actions: Actions = {
 		}
 
 		try {
+			const eventTitle = evt[0].title;
 			await db.delete(event).where(eq(event.id, params.id));
+			await logAuditEvent({ request, locals } as any, 'delete', {
+				resourceType: 'event',
+				resourceId: params.id,
+				details: { title: eventTitle }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Löschen des Events' });
@@ -185,6 +197,12 @@ export const actions: Actions = {
 				userId: currentUser.id
 			});
 
+			await logAuditEvent({ request, locals } as any, 'assign', {
+				resourceType: 'job',
+				resourceId: jobId,
+				details: { userId: currentUser.id, userName: currentUser.name }
+			});
+
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Zuweisen der Aufgabe' });
@@ -204,6 +222,11 @@ export const actions: Actions = {
 			await db
 				.delete(jobAssignment)
 				.where(and(eq(jobAssignment.jobId, jobId), eq(jobAssignment.userId, currentUser.id)));
+			await logAuditEvent({ request, locals } as any, 'unassign', {
+				resourceType: 'job',
+				resourceId: jobId,
+				details: { userId: currentUser.id, userName: currentUser.name }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Abmelden von der Aufgabe' });
@@ -250,6 +273,12 @@ export const actions: Actions = {
 				userId: currentUser.id
 			});
 
+			await logAuditEvent({ request, locals } as any, 'assign', {
+				resourceType: 'material',
+				resourceId: materialId,
+				details: { userId: currentUser.id, userName: currentUser.name }
+			});
+
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Zuweisen des Materials' });
@@ -274,6 +303,11 @@ export const actions: Actions = {
 						eq(materialAssignment.userId, currentUser.id)
 					)
 				);
+			await logAuditEvent({ request, locals } as any, 'unassign', {
+				resourceType: 'material',
+				resourceId: materialId,
+				details: { userId: currentUser.id, userName: currentUser.name }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Abmelden vom Material' });

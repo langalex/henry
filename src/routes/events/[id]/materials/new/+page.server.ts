@@ -5,6 +5,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const user = requireAuth({ locals } as any);
@@ -32,11 +33,17 @@ export const actions: Actions = {
 		}
 
 		try {
+			const materialId = randomUUID();
 			await db.insert(material).values({
-				id: randomUUID(),
+				id: materialId,
 				eventId: params.id!,
 				title,
 				description
+			});
+			await logAuditEvent({ request, locals } as any, 'create', {
+				resourceType: 'material',
+				resourceId: materialId,
+				details: { title, eventId: params.id }
 			});
 			throw redirect(303, `/events/${params.id}/materials`);
 		} catch (err) {

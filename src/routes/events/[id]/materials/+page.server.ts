@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const user = requireAuth({ locals } as any);
@@ -36,6 +37,11 @@ export const actions: Actions = {
 
 		try {
 			await db.update(material).set({ title, description }).where(eq(material.id, id));
+			await logAuditEvent({ request, locals } as any, 'update', {
+				resourceType: 'material',
+				resourceId: id,
+				details: { title }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Aktualisieren des Materials' });
@@ -52,7 +58,13 @@ export const actions: Actions = {
 		}
 
 		try {
+			const [materialData] = await db.select().from(material).where(eq(material.id, id)).limit(1);
 			await db.delete(material).where(eq(material.id, id));
+			await logAuditEvent({ request, locals } as any, 'delete', {
+				resourceType: 'material',
+				resourceId: id,
+				details: { title: materialData?.title }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Löschen des Materials' });

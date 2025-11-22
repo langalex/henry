@@ -4,6 +4,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const currentUser = requireAuth({ locals } as any);
@@ -79,6 +80,11 @@ export const actions: Actions = {
 				.update(job)
 				.set({ title, description, startTime, endTime, numberOfPeople })
 				.where(eq(job.id, id));
+			await logAuditEvent({ request, locals } as any, 'update', {
+				resourceType: 'job',
+				resourceId: id,
+				details: { title, startTime, endTime, numberOfPeople }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Aktualisieren der Aufgabe' });
@@ -95,7 +101,13 @@ export const actions: Actions = {
 		}
 
 		try {
+			const [jobData] = await db.select().from(job).where(eq(job.id, id)).limit(1);
 			await db.delete(job).where(eq(job.id, id));
+			await logAuditEvent({ request, locals } as any, 'delete', {
+				resourceType: 'job',
+				resourceId: id,
+				details: { title: jobData?.title }
+			});
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Löschen der Aufgabe' });

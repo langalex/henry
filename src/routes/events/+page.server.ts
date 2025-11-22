@@ -4,6 +4,7 @@ import { eq, asc } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export async function load(loadEvent) {
 	const user = requireAuth(loadEvent);
@@ -38,14 +39,20 @@ export const actions = {
 		}
 
 		try {
+			const jobId = randomUUID();
 			await db.insert(job).values({
-				id: randomUUID(),
+				id: jobId,
 				eventId,
 				title,
 				description,
 				startTime,
 				endTime,
 				numberOfPeople
+			});
+			await logAuditEvent({ request, locals } as any, 'create', {
+				resourceType: 'job',
+				resourceId: jobId,
+				details: { title, eventId, startTime, endTime, numberOfPeople }
 			});
 			return { success: true };
 		} catch (error) {
@@ -72,6 +79,11 @@ export const actions = {
 				.update(job)
 				.set({ title, description, startTime, endTime, numberOfPeople })
 				.where(eq(job.id, id));
+			await logAuditEvent({ request, locals } as any, 'update', {
+				resourceType: 'job',
+				resourceId: id,
+				details: { title, startTime, endTime, numberOfPeople }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Aktualisieren der Aufgabe' });
@@ -88,7 +100,13 @@ export const actions = {
 		}
 
 		try {
+			const [jobData] = await db.select().from(job).where(eq(job.id, id)).limit(1);
 			await db.delete(job).where(eq(job.id, id));
+			await logAuditEvent({ request, locals } as any, 'delete', {
+				resourceType: 'job',
+				resourceId: id,
+				details: { title: jobData?.title }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Löschen der Aufgabe' });
@@ -107,11 +125,17 @@ export const actions = {
 		}
 
 		try {
+			const materialId = randomUUID();
 			await db.insert(material).values({
-				id: randomUUID(),
+				id: materialId,
 				eventId,
 				title,
 				description
+			});
+			await logAuditEvent({ request, locals } as any, 'create', {
+				resourceType: 'material',
+				resourceId: materialId,
+				details: { title, eventId }
 			});
 			return { success: true };
 		} catch (error) {
@@ -132,6 +156,11 @@ export const actions = {
 
 		try {
 			await db.update(material).set({ title, description }).where(eq(material.id, id));
+			await logAuditEvent({ request, locals } as any, 'update', {
+				resourceType: 'material',
+				resourceId: id,
+				details: { title }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Aktualisieren des Materials' });
@@ -148,7 +177,13 @@ export const actions = {
 		}
 
 		try {
+			const [materialData] = await db.select().from(material).where(eq(material.id, id)).limit(1);
 			await db.delete(material).where(eq(material.id, id));
+			await logAuditEvent({ request, locals } as any, 'delete', {
+				resourceType: 'material',
+				resourceId: id,
+				details: { title: materialData?.title }
+			});
 			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'Fehler beim Löschen des Materials' });

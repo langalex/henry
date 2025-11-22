@@ -5,6 +5,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const user = requireAuth({ locals } as any);
@@ -35,14 +36,20 @@ export const actions: Actions = {
 		}
 
 		try {
+			const jobId = randomUUID();
 			await db.insert(job).values({
-				id: randomUUID(),
+				id: jobId,
 				eventId: params.id!,
 				title,
 				description,
 				startTime,
 				endTime,
 				numberOfPeople
+			});
+			await logAuditEvent({ request, locals } as any, 'create', {
+				resourceType: 'job',
+				resourceId: jobId,
+				details: { title, eventId: params.id, startTime, endTime, numberOfPeople }
 			});
 			throw redirect(303, `/events/${params.id}/jobs`);
 		} catch (err) {

@@ -3,6 +3,7 @@ import { event } from '$lib/server/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
+import { logAuditEvent } from '$lib/server/audit-log';
 
 export async function load(loadEvent) {
 	const user = requireAuth(loadEvent);
@@ -10,9 +11,9 @@ export async function load(loadEvent) {
 }
 
 export const actions = {
-	createEvent: async ({ request, locals }) => {
-		requireAdmin({ locals } as any);
-		const data = await request.formData();
+	createEvent: async (actionEvent) => {
+		requireAdmin(actionEvent);
+		const data = await actionEvent.request.formData();
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString() || '';
 		const date = data.get('date')?.toString();
@@ -23,14 +24,24 @@ export const actions = {
 		}
 
 		try {
+			const eventId = randomUUID();
 			await db.insert(event).values({
-				id: randomUUID(),
+				id: eventId,
 				title,
 				description,
 				date,
 				time,
 				createdAt: new Date()
 			});
+			await logAuditEvent(
+				{ request: actionEvent.request, locals: actionEvent.locals } as any,
+				'create',
+				{
+					resourceType: 'event',
+					resourceId: eventId,
+					details: { title, date, time }
+				}
+			);
 			throw redirect(303, '/events');
 		} catch (error) {
 			if (error && typeof error === 'object' && 'status' in error) {

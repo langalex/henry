@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import type { RequestEvent } from '@sveltejs/kit';
 
 export async function logAuditEvent(
-	event: RequestEvent,
+	event: RequestEvent | { request: Request; locals: App.Locals; getClientAddress?: () => string },
 	action: string,
 	options?: {
 		resourceType?: string;
@@ -14,7 +14,8 @@ export async function logAuditEvent(
 	}
 ) {
 	const userId = event.locals.user?.id || null;
-	const ipAddress = event.getClientAddress();
+	const ipAddress =
+		'getClientAddress' in event && event.getClientAddress ? event.getClientAddress() : null;
 	const userAgent = event.request.headers.get('user-agent') || null;
 
 	const detailsString =
@@ -62,9 +63,6 @@ export async function getAuditLogs(limit: number = 100, offset: number = 0) {
 }
 
 export async function getAuditLogCount() {
-	const result = await db
-		.select()
-		.from(table.auditLog);
+	const result = await db.select().from(table.auditLog);
 	return result.length;
 }
-
