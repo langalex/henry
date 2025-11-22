@@ -187,6 +187,12 @@
 							</div>
 							<div class="flex gap-2 flex-col md:flex-row">
 								{#if data.user?.roles?.includes('admin')}
+									<a
+										href="/events/{data.event.id}/jobs/{j.id}/assign"
+										class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+									>
+										Eltern zuweisen
+									</a>
 									<button
 										onclick={() => (editingJobId = j.id)}
 										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
