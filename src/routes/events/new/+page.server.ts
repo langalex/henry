@@ -2,15 +2,16 @@ import { db } from '$lib/server/db';
 import { event } from '$lib/server/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
-import { requireAuth } from '$lib/server/auth-helpers';
+import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 
 export async function load(loadEvent) {
-	requireAuth(loadEvent);
+	const user = requireAuth(loadEvent);
+	return { user };
 }
 
 export const actions = {
 	createEvent: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString() || '';
@@ -39,4 +40,3 @@ export const actions = {
 		}
 	}
 };
-

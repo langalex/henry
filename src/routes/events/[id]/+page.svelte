@@ -63,43 +63,45 @@
 					<h1 class="text-3xl font-bold mb-4">{data.event.title}</h1>
 				{/if}
 			</div>
-			<div class="flex gap-2">
-				{#if editing}
-					<button
-						onclick={() => (editing = false)}
-						class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-					>
-						Abbrechen
-					</button>
-				{:else}
-					<button
-						onclick={() => (editing = true)}
-						class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-					>
-						Bearbeiten
-					</button>
-					<form
-						method="POST"
-						action="?/deleteEvent"
-						use:enhance={() => {
-							return async ({ update }) => {
-								if (confirm('Möchten Sie diese Veranstaltung wirklich löschen?')) {
-									await update();
-									await handleDelete();
-								}
-							};
-						}}
-						class="inline"
-					>
+			{#if data.user?.roles?.includes('admin')}
+				<div class="flex gap-2">
+					{#if editing}
 						<button
-							type="submit"
-							class="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+							onclick={() => (editing = false)}
+							class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
 						>
-							Löschen
+							Abbrechen
 						</button>
-					</form>
-				{/if}
-			</div>
+					{:else}
+						<button
+							onclick={() => (editing = true)}
+							class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+						>
+							Bearbeiten
+						</button>
+						<form
+							method="POST"
+							action="?/deleteEvent"
+							use:enhance={() => {
+								return async ({ update }) => {
+									if (confirm('Möchten Sie diese Veranstaltung wirklich löschen?')) {
+										await update();
+										await handleDelete();
+									}
+								};
+							}}
+							class="inline"
+						>
+							<button
+								type="submit"
+								class="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+							>
+								Löschen
+							</button>
+						</form>
+					{/if}
+				</div>
+			{/if}
 		</div>
 
 		{#if editing}

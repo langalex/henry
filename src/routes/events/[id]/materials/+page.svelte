@@ -41,12 +41,14 @@
 	<div class="mb-8">
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-2xl font-semibold">Materialien</h2>
-			<a
-				href="/events/{data.event.id}/materials/new"
-				class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-			>
-				Neues Material hinzufügen
-			</a>
+			{#if data.user?.roles?.includes('admin')}
+				<a
+					href="/events/{data.event.id}/materials/new"
+					class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+				>
+					Neues Material hinzufügen
+				</a>
+			{/if}
 		</div>
 
 		{#if data.materials.length === 0}
@@ -124,35 +126,37 @@
 									<p class="text-sm text-gray-600 mt-1">{m.description}</p>
 								{/if}
 							</div>
-							<div class="flex gap-2">
-								<button
-									onclick={() => (editingMaterialId = m.id)}
-									class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-								>
-									Bearbeiten
-								</button>
-								<form
-									method="POST"
-									action="?/deleteMaterial"
-									use:enhance={() => {
-										return async ({ update }) => {
-											if (confirm('Möchten Sie dieses Material wirklich löschen?')) {
-												await update();
-												await handleSubmit();
-											}
-										};
-									}}
-									class="inline"
-								>
-									<input type="hidden" name="id" value={m.id} />
+							{#if data.user?.roles?.includes('admin')}
+								<div class="flex gap-2">
 									<button
-										type="submit"
-										class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+										onclick={() => (editingMaterialId = m.id)}
+										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
 									>
-										Löschen
+										Bearbeiten
 									</button>
-								</form>
-							</div>
+									<form
+										method="POST"
+										action="?/deleteMaterial"
+										use:enhance={() => {
+											return async ({ update }) => {
+												if (confirm('Möchten Sie dieses Material wirklich löschen?')) {
+													await update();
+													await handleSubmit();
+												}
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="id" value={m.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+										>
+											Löschen
+										</button>
+									</form>
+								</div>
+							{/if}
 						</div>
 					{/if}
 				{/each}

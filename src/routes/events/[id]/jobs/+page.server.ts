@@ -3,10 +3,10 @@ import { event, job } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { requireAuth } from '$lib/server/auth-helpers';
+import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	requireAuth({ locals } as any);
+	const user = requireAuth({ locals } as any);
 	const evt = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
 
 	if (evt.length === 0) {
@@ -17,13 +17,14 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	return {
 		event: evt[0],
-		jobs
+		jobs,
+		user
 	};
 };
 
 export const actions: Actions = {
 	updateJob: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 		const title = data.get('title')?.toString();
@@ -48,7 +49,7 @@ export const actions: Actions = {
 	},
 
 	deleteJob: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 

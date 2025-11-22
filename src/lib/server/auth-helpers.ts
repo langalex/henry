@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, error } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 
 export function requireAuth(event: RequestEvent) {
@@ -8,3 +8,10 @@ export function requireAuth(event: RequestEvent) {
 	return event.locals.user;
 }
 
+export function requireAdmin(event: RequestEvent) {
+	const user = requireAuth(event);
+	if (!user.roles?.includes('admin')) {
+		throw error(403, 'Zugriff verweigert: Admin-Rechte erforderlich');
+	}
+	return user;
+}

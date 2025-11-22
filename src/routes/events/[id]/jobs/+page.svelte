@@ -41,12 +41,14 @@
 	<div class="mb-8">
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-2xl font-semibold">Aufgaben</h2>
-			<a
-				href="/events/{data.event.id}/jobs/new"
-				class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-			>
-				Neue Aufgabe hinzufügen
-			</a>
+			{#if data.user?.roles?.includes('admin')}
+				<a
+					href="/events/{data.event.id}/jobs/new"
+					class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+				>
+					Neue Aufgabe hinzufügen
+				</a>
+			{/if}
 		</div>
 
 		{#if data.jobs.length === 0}
@@ -180,35 +182,37 @@
 										: ''})
 								</p>
 							</div>
-							<div class="flex gap-2">
-								<button
-									onclick={() => (editingJobId = j.id)}
-									class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-								>
-									Bearbeiten
-								</button>
-								<form
-									method="POST"
-									action="?/deleteJob"
-									use:enhance={() => {
-										return async ({ update }) => {
-											if (confirm('Möchten Sie diese Aufgabe wirklich löschen?')) {
-												await update();
-												await handleSubmit();
-											}
-										};
-									}}
-									class="inline"
-								>
-									<input type="hidden" name="id" value={j.id} />
+							{#if data.user?.roles?.includes('admin')}
+								<div class="flex gap-2">
 									<button
-										type="submit"
-										class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+										onclick={() => (editingJobId = j.id)}
+										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
 									>
-										Löschen
+										Bearbeiten
 									</button>
-								</form>
-							</div>
+									<form
+										method="POST"
+										action="?/deleteJob"
+										use:enhance={() => {
+											return async ({ update }) => {
+												if (confirm('Möchten Sie diese Aufgabe wirklich löschen?')) {
+													await update();
+													await handleSubmit();
+												}
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="id" value={j.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+										>
+											Löschen
+										</button>
+									</form>
+								</div>
+							{/if}
 						</div>
 					{/if}
 				{/each}

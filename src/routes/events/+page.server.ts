@@ -3,10 +3,10 @@ import { event, job, material } from '$lib/server/db/schema';
 import { eq, asc } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
-import { requireAuth } from '$lib/server/auth-helpers';
+import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 
 export async function load(loadEvent) {
-	requireAuth(loadEvent);
+	const user = requireAuth(loadEvent);
 	const events = await db.select().from(event).orderBy(asc(event.date), asc(event.time));
 
 	const eventsWithRelations = await Promise.all(
@@ -19,12 +19,12 @@ export async function load(loadEvent) {
 		})
 	);
 
-	return { events: eventsWithRelations };
+	return { events: eventsWithRelations, user };
 }
 
 export const actions = {
 	createJob: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const eventId = data.get('eventId')?.toString();
 		const title = data.get('title')?.toString();
@@ -54,7 +54,7 @@ export const actions = {
 	},
 
 	updateJob: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 		const title = data.get('title')?.toString();
@@ -79,7 +79,7 @@ export const actions = {
 	},
 
 	deleteJob: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 
@@ -96,7 +96,7 @@ export const actions = {
 	},
 
 	createMaterial: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const eventId = data.get('eventId')?.toString();
 		const title = data.get('title')?.toString();
@@ -120,7 +120,7 @@ export const actions = {
 	},
 
 	updateMaterial: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 		const title = data.get('title')?.toString();
@@ -139,7 +139,7 @@ export const actions = {
 	},
 
 	deleteMaterial: async ({ request, locals }) => {
-		requireAuth({ locals } as any);
+		requireAdmin({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 
