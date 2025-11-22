@@ -15,6 +15,13 @@
 			"when": 1763849600000,
 			"tag": "0001_remove_ip_address",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1763850000000,
+			"tag": "0002_add_name_email_to_audit_log",
+			"breakpoints": true
 		}
 	]
 }

@@ -84,6 +84,8 @@ export const materialAssignment = sqliteTable('material_assignment', {
 export const auditLog = sqliteTable('audit_log', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
+	name: text('name'),
+	email: text('email'),
 	action: text('action').notNull(),
 	resourceType: text('resource_type'),
 	resourceId: text('resource_id'),

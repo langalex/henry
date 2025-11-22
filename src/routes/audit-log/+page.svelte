@@ -59,8 +59,13 @@
 							{formatDate(log.createdAt)}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{#if log.user}
-								{log.user.name} ({log.user.email})
+							{#if log.name}
+								{log.name}
+								{#if log.user}
+									<span class="text-gray-500"> ({log.user.email})</span>
+								{:else if log.email}
+									<span class="text-gray-500"> ({log.email})</span>
+								{/if}
 							{:else}
 								<span class="text-gray-400">System</span>
 							{/if}

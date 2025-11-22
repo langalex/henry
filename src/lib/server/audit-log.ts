@@ -4,6 +4,18 @@ import { desc, eq } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import type { RequestEvent } from '@sveltejs/kit';
 
+function maskEmail(email: string): string {
+	const [localPart, domain] = email.split('@');
+	if (!domain) return email;
+
+	if (localPart.length <= 2) {
+		return `${localPart[0]}***@***`;
+	}
+
+	const maskedLocal = `${localPart[0]}${'*'.repeat(localPart.length - 2)}${localPart[localPart.length - 1]}`;
+	return `${maskedLocal}@***`;
+}
+
 export async function logAuditEvent(
 	event: RequestEvent | { request: Request; locals: App.Locals },
 	action: string,
@@ -14,6 +26,15 @@ export async function logAuditEvent(
 	}
 ) {
 	const userId = event.locals.user?.id || null;
+	let userName: string | null = null;
+	let maskedEmail: string | null = null;
+
+	if (event.locals.user) {
+		userName = event.locals.user.name;
+		if (event.locals.user.email) {
+			maskedEmail = maskEmail(event.locals.user.email);
+		}
+	}
 
 	const detailsString: string | null = options?.details
 		? typeof options.details === 'object'
@@ -24,6 +45,8 @@ export async function logAuditEvent(
 	await db.insert(table.auditLog).values({
 		id: randomUUID(),
 		userId,
+		name: userName,
+		email: maskedEmail,
 		action,
 		resourceType: options?.resourceType || null,
 		resourceId: options?.resourceId || null,
@@ -37,6 +60,8 @@ export async function getAuditLogs(limit: number = 100, offset: number = 0) {
 		.select({
 			id: table.auditLog.id,
 			userId: table.auditLog.userId,
+			name: table.auditLog.name,
+			email: table.auditLog.email,
 			action: table.auditLog.action,
 			resourceType: table.auditLog.resourceType,
 			resourceId: table.auditLog.resourceId,
