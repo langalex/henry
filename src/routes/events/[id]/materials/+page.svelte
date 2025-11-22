@@ -39,56 +39,15 @@
 	{/if}
 
 	<div class="mb-8">
-		<h2 class="text-2xl font-semibold mb-4">Materialien</h2>
-		{#if editingMaterialId === null}
-			<form
-				method="POST"
-				action="?/createMaterial"
-				use:enhance={() => {
-					return async ({ update }) => {
-						await update();
-						await handleSubmit();
-					};
-				}}
-				class="mb-6 p-4 bg-gray-50 rounded-md space-y-4"
+		<div class="flex justify-between items-center mb-4">
+			<h2 class="text-2xl font-semibold">Materialien</h2>
+			<a
+				href="/events/{data.event.id}/materials/new"
+				class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
 			>
-				<div>
-					<label
-						for="material-title"
-						class="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Titel *
-					</label>
-					<input
-						type="text"
-						id="material-title"
-						name="title"
-						required
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-				</div>
-				<div>
-					<label
-						for="material-description"
-						class="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Beschreibung
-					</label>
-					<textarea
-						id="material-description"
-						name="description"
-						rows="2"
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					></textarea>
-				</div>
-				<button
-					type="submit"
-					class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-				>
-					Material hinzufügen
-				</button>
-			</form>
-		{/if}
+				Neues Material hinzufügen
+			</a>
+		</div>
 
 		{#if data.materials.length === 0}
 			<p class="text-gray-600 text-sm">Keine Materialien vorhanden.</p>
@@ -207,4 +166,3 @@
 		min-height: 100vh;
 	}
 </style>
-

@@ -39,98 +39,15 @@
 	{/if}
 
 	<div class="mb-8">
-		<h2 class="text-2xl font-semibold mb-4">Aufgaben</h2>
-		{#if editingJobId === null}
-			<form
-				method="POST"
-				action="?/createJob"
-				use:enhance={() => {
-					return async ({ update }) => {
-						await update();
-						await handleSubmit();
-					};
-				}}
-				class="mb-6 p-4 bg-gray-50 rounded-md space-y-4"
+		<div class="flex justify-between items-center mb-4">
+			<h2 class="text-2xl font-semibold">Aufgaben</h2>
+			<a
+				href="/events/{data.event.id}/jobs/new"
+				class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
 			>
-				<div>
-					<label for="job-title" class="block text-sm font-medium text-gray-700 mb-1">
-						Titel *
-					</label>
-					<input
-						type="text"
-						id="job-title"
-						name="title"
-						required
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-				</div>
-				<div>
-					<label
-						for="job-description"
-						class="block text-sm font-medium text-gray-700 mb-1"
-					>
-						Beschreibung
-					</label>
-					<textarea
-						id="job-description"
-						name="description"
-						rows="2"
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					></textarea>
-				</div>
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-					<div>
-						<label
-							for="job-start"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							Startzeit *
-						</label>
-						<input
-							type="time"
-							id="job-start"
-							name="startTime"
-							required
-							class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-					</div>
-					<div>
-						<label for="job-end" class="block text-sm font-medium text-gray-700 mb-1">
-							Endzeit *
-						</label>
-						<input
-							type="time"
-							id="job-end"
-							name="endTime"
-							required
-							class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-					</div>
-					<div>
-						<label
-							for="job-people"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							Anzahl Personen *
-						</label>
-						<input
-							type="number"
-							id="job-people"
-							name="numberOfPeople"
-							min="1"
-							required
-							class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-					</div>
-				</div>
-				<button
-					type="submit"
-					class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-				>
-					Aufgabe hinzufügen
-				</button>
-			</form>
-		{/if}
+				Neue Aufgabe hinzufügen
+			</a>
+		</div>
 
 		{#if data.jobs.length === 0}
 			<p class="text-gray-600 text-sm">Keine Aufgaben vorhanden.</p>
@@ -258,8 +175,7 @@
 									<p class="text-sm text-gray-600 mt-1">{j.description}</p>
 								{/if}
 								<p class="text-sm text-gray-500 mt-1">
-									{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !==
-									1
+									{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !== 1
 										? 'en'
 										: ''})
 								</p>
@@ -306,4 +222,3 @@
 		min-height: 100vh;
 	}
 </style>
-
