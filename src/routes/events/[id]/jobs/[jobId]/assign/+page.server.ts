@@ -93,7 +93,10 @@ export const actions: Actions = {
 				resourceType: 'job',
 				resourceId: params.jobId,
 				resourceName: jobData.title,
-				details: { userId, userName: userData?.name || '' }
+				details: { userId, userName: userData?.name || '' },
+				targetUserId: userId,
+				targetUserName: userData?.name || null,
+				targetUserEmail: userData?.email || null
 			});
 
 			return { success: true };
@@ -127,7 +130,10 @@ export const actions: Actions = {
 				resourceType: 'job',
 				resourceId: params.jobId,
 				resourceName: jobData.title,
-				details: { userId, userName: userData?.name || '' }
+				details: { userId, userName: userData?.name || '' },
+				targetUserId: userId,
+				targetUserName: userData?.name || null,
+				targetUserEmail: userData?.email || null
 			});
 
 			return { success: true };
@@ -136,4 +142,3 @@ export const actions: Actions = {
 		}
 	}
 };
-

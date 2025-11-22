@@ -91,6 +91,9 @@ export const auditLog = sqliteTable('audit_log', {
 	resourceId: text('resource_id'),
 	resourceName: text('resource_name'),
 	details: text('details'),
+	targetUserId: text('target_user_id').references(() => user.id, { onDelete: 'set null' }),
+	targetUserName: text('target_user_name'),
+	targetUserEmail: text('target_user_email'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 });
 

@@ -1,6 +1,7 @@
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
 import { randomUUID } from 'crypto';
 import type { RequestEvent } from '@sveltejs/kit';
 
@@ -24,6 +25,9 @@ export async function logAuditEvent(
 		resourceId?: string;
 		resourceName?: string;
 		details?: string | Record<string, unknown>;
+		targetUserId?: string;
+		targetUserName?: string;
+		targetUserEmail?: string;
 	}
 ) {
 	const userId = event.locals.user?.id || null;
@@ -43,6 +47,11 @@ export async function logAuditEvent(
 			: options.details
 		: null;
 
+	let targetUserEmail: string | null = null;
+	if (options?.targetUserEmail) {
+		targetUserEmail = maskEmail(options.targetUserEmail);
+	}
+
 	await db.insert(table.auditLog).values({
 		id: randomUUID(),
 		userId,
@@ -53,11 +62,16 @@ export async function logAuditEvent(
 		resourceId: options?.resourceId || null,
 		resourceName: options?.resourceName || null,
 		details: detailsString,
+		targetUserId: options?.targetUserId || null,
+		targetUserName: options?.targetUserName || null,
+		targetUserEmail,
 		createdAt: new Date()
 	});
 }
 
 export async function getAuditLogs(limit: number = 100, offset: number = 0) {
+	const targetUserAlias = alias(table.user, 'target_user');
+
 	const logs = await db
 		.select({
 			id: table.auditLog.id,
@@ -69,14 +83,22 @@ export async function getAuditLogs(limit: number = 100, offset: number = 0) {
 			resourceId: table.auditLog.resourceId,
 			resourceName: table.auditLog.resourceName,
 			details: table.auditLog.details,
+			targetUserId: table.auditLog.targetUserId,
+			targetUserName: table.auditLog.targetUserName,
+			targetUserEmail: table.auditLog.targetUserEmail,
 			createdAt: table.auditLog.createdAt,
 			user: {
 				name: table.user.name,
 				email: table.user.email
+			},
+			targetUser: {
+				name: targetUserAlias.name,
+				email: targetUserAlias.email
 			}
 		})
 		.from(table.auditLog)
 		.leftJoin(table.user, eq(table.auditLog.userId, table.user.id))
+		.leftJoin(targetUserAlias, eq(table.auditLog.targetUserId, targetUserAlias.id))
 		.orderBy(desc(table.auditLog.createdAt))
 		.limit(limit)
 		.offset(offset);

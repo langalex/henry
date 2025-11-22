@@ -203,7 +203,10 @@ export const actions: Actions = {
 				resourceType: 'job',
 				resourceId: jobId,
 				resourceName: jobData.title,
-				details: { userId: currentUser.id, userName: currentUser.name }
+				details: { userId: currentUser.id, userName: currentUser.name },
+				targetUserId: currentUser.id,
+				targetUserName: currentUser.name,
+				targetUserEmail: currentUser.email || null
 			});
 
 			return { success: true };
@@ -230,7 +233,10 @@ export const actions: Actions = {
 				resourceType: 'job',
 				resourceId: jobId,
 				resourceName: jobData?.title || '',
-				details: { userId: currentUser.id, userName: currentUser.name }
+				details: { userId: currentUser.id, userName: currentUser.name },
+				targetUserId: currentUser.id,
+				targetUserName: currentUser.name,
+				targetUserEmail: currentUser.email || null
 			});
 			return { success: true };
 		} catch (err) {
@@ -282,7 +288,10 @@ export const actions: Actions = {
 				resourceType: 'material',
 				resourceId: materialId,
 				resourceName: materialData.title,
-				details: { userId: currentUser.id, userName: currentUser.name }
+				details: { userId: currentUser.id, userName: currentUser.name },
+				targetUserId: currentUser.id,
+				targetUserName: currentUser.name,
+				targetUserEmail: currentUser.email || null
 			});
 
 			return { success: true };
@@ -318,7 +327,10 @@ export const actions: Actions = {
 				resourceType: 'material',
 				resourceId: materialId,
 				resourceName: materialData?.title || '',
-				details: { userId: currentUser.id, userName: currentUser.name }
+				details: { userId: currentUser.id, userName: currentUser.name },
+				targetUserId: currentUser.id,
+				targetUserName: currentUser.name,
+				targetUserEmail: currentUser.email || null
 			});
 			return { success: true };
 		} catch (err) {
