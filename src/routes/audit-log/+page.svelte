@@ -75,12 +75,12 @@
 							{log.resourceName}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {log.targetUserName}
-              {#if log.targetUser}
-                <span class="text-gray-500"> ({log.targetUser.email})</span>
-              {:else if log.targetUserEmail}
-                <span class="text-gray-500"> ({log.targetUserEmail})</span>
-              {/if}
+							{log.targetUserName}
+							{#if log.targetUser}
+								<span class="text-gray-500"> ({log.targetUser.email})</span>
+							{:else if log.targetUserEmail}
+								<span class="text-gray-500"> ({log.targetUserEmail})</span>
+							{/if}
 						</td>
 					</tr>
 				{/each}
