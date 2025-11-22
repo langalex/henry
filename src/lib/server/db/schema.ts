@@ -3,14 +3,31 @@ import { relations } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
-	age: integer('age')
+	email: text('email').notNull().unique(),
+	name: text('name').notNull()
 });
 
 export const session = sqliteTable('session', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
-		.references(() => user.id),
+		.references(() => user.id, { onDelete: 'cascade' }),
+	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
+});
+
+export const userRole = sqliteTable('user_role', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	role: text('role').notNull()
+});
+
+export const emailVerificationToken = sqliteTable('email_verification_token', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
 });
 
@@ -44,6 +61,19 @@ export const material = sqliteTable('material', {
 	description: text('description')
 });
 
+export const userRelations = relations(user, ({ many }) => ({
+	roles: many(userRole),
+	sessions: many(session),
+	emailVerificationTokens: many(emailVerificationToken)
+}));
+
+export const userRoleRelations = relations(userRole, ({ one }) => ({
+	user: one(user, {
+		fields: [userRole.userId],
+		references: [user.id]
+	})
+}));
+
 export const eventRelations = relations(event, ({ many }) => ({
 	jobs: many(job),
 	materials: many(material)
@@ -65,9 +95,14 @@ export const materialRelations = relations(material, ({ one }) => ({
 
 export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
+export type UserRole = typeof userRole.$inferSelect;
+export type EmailVerificationToken = typeof emailVerificationToken.$inferSelect;
 export type Event = typeof event.$inferSelect;
 export type Job = typeof job.$inferSelect;
 export type Material = typeof material.$inferSelect;
+export type NewUser = typeof user.$inferInsert;
+export type NewUserRole = typeof userRole.$inferInsert;
+export type NewEmailVerificationToken = typeof emailVerificationToken.$inferInsert;
 export type NewEvent = typeof event.$inferInsert;
 export type NewJob = typeof job.$inferInsert;
 export type NewMaterial = typeof material.$inferInsert;

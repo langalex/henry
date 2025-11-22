@@ -1,15 +1,23 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import { randomUUID } from 'crypto';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const EMAIL_TOKEN_EXPIRES_IN = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
 
 export function generateSessionToken() {
+	const bytes = crypto.getRandomValues(new Uint8Array(18));
+	const token = encodeBase64url(bytes);
+	return token;
+}
+
+export function generateEmailToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(18));
 	const token = encodeBase64url(bytes);
 	return token;
@@ -30,8 +38,7 @@ export async function validateSessionToken(token: string) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const [result] = await db
 		.select({
-			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, username: table.user.username },
+			user: table.user,
 			session: table.session
 		})
 		.from(table.session)
@@ -58,7 +65,18 @@ export async function validateSessionToken(token: string) {
 			.where(eq(table.session.id, session.id));
 	}
 
-	return { session, user };
+	const roles = await db
+		.select({ role: table.userRole.role })
+		.from(table.userRole)
+		.where(eq(table.userRole.userId, user.id));
+
+	return {
+		session,
+		user: {
+			...user,
+			roles: roles.map((r) => r.role)
+		}
+	};
 }
 
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
@@ -70,12 +88,97 @@ export async function invalidateSession(sessionId: string) {
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
 	event.cookies.set(sessionCookieName, token, {
 		expires: expiresAt,
-		path: '/'
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: process.env.NODE_ENV === 'production'
 	});
 }
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
 		path: '/'
+	});
+}
+
+export async function createEmailVerificationToken(userId: string) {
+	const token = generateEmailToken();
+	const tokenId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	await db.insert(table.emailVerificationToken).values({
+		id: tokenId,
+		userId,
+		expiresAt: new Date(Date.now() + EMAIL_TOKEN_EXPIRES_IN)
+	});
+	return token;
+}
+
+export async function validateEmailToken(token: string) {
+	const tokenId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	const [result] = await db
+		.select({
+			emailVerificationToken: table.emailVerificationToken,
+			user: table.user
+		})
+		.from(table.emailVerificationToken)
+		.innerJoin(table.user, eq(table.emailVerificationToken.userId, table.user.id))
+		.where(eq(table.emailVerificationToken.id, tokenId));
+
+	if (!result) {
+		return { token: null, user: null };
+	}
+
+	const { emailVerificationToken: emailToken, user } = result;
+
+	const tokenExpired = Date.now() >= emailToken.expiresAt.getTime();
+	if (tokenExpired) {
+		await db
+			.delete(table.emailVerificationToken)
+			.where(eq(table.emailVerificationToken.id, emailToken.id));
+		return { token: null, user: null };
+	}
+
+	await db
+		.delete(table.emailVerificationToken)
+		.where(eq(table.emailVerificationToken.id, emailToken.id));
+
+	return { token: emailToken, user };
+}
+
+export async function getUserByEmail(email: string) {
+	const [user] = await db.select().from(table.user).where(eq(table.user.email, email));
+	return user || null;
+}
+
+export async function createUser(email: string, name: string, roles: string[] = []) {
+	const userId = randomUUID();
+	await db.insert(table.user).values({
+		id: userId,
+		email,
+		name
+	});
+
+	if (roles.length > 0) {
+		await db.insert(table.userRole).values(
+			roles.map((role) => ({
+				id: randomUUID(),
+				userId,
+				role
+			}))
+		);
+	}
+
+	return userId;
+}
+
+export async function getUserCount() {
+	const result = await db.select({ count: table.user.id }).from(table.user);
+	return result.length;
+}
+
+export async function addUserRole(userId: string, role: string) {
+	await db.insert(table.userRole).values({
+		id: randomUUID(),
+		userId,
+		role
 	});
 }

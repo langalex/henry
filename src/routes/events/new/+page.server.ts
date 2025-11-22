@@ -2,9 +2,15 @@ import { db } from '$lib/server/db';
 import { event } from '$lib/server/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
+import { requireAuth } from '$lib/server/auth-helpers';
+
+export async function load(loadEvent) {
+	requireAuth(loadEvent);
+}
 
 export const actions = {
-	createEvent: async ({ request }) => {
+	createEvent: async ({ request, locals }) => {
+		requireAuth({ locals } as any);
 		const data = await request.formData();
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString() || '';

@@ -3,8 +3,10 @@ import { event, material } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import { requireAuth } from '$lib/server/auth-helpers';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
+	requireAuth({ locals } as any);
 	const evt = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
 
 	if (evt.length === 0) {
@@ -20,7 +22,8 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-	updateMaterial: async ({ request }) => {
+	updateMaterial: async ({ request, locals }) => {
+		requireAuth({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 		const title = data.get('title')?.toString();
@@ -38,7 +41,8 @@ export const actions: Actions = {
 		}
 	},
 
-	deleteMaterial: async ({ request }) => {
+	deleteMaterial: async ({ request, locals }) => {
+		requireAuth({ locals } as any);
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 

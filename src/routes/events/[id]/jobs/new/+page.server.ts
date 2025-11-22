@@ -4,8 +4,10 @@ import { eq } from 'drizzle-orm';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
+import { requireAuth } from '$lib/server/auth-helpers';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
+	requireAuth({ locals } as any);
 	const evt = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
 
 	if (evt.length === 0) {
@@ -18,7 +20,8 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-	createJob: async ({ request, params }) => {
+	createJob: async ({ request, params, locals }) => {
+		requireAuth({ locals } as any);
 		const data = await request.formData();
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString() || '';
@@ -49,4 +52,3 @@ export const actions: Actions = {
 		}
 	}
 };
-
