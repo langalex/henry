@@ -44,7 +44,6 @@
 	<h1 class="text-3xl font-bold mb-8">Veranstaltungen</h1>
 
 	<div class="mb-8 flex justify-between items-center">
-		<h2 class="text-2xl font-semibold">Veranstaltungen</h2>
 		{#if data.user?.roles?.includes('admin')}
 			<a
 				href="/events/new"
