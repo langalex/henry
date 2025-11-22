@@ -86,7 +86,12 @@
 					<div class="bg-white rounded-lg shadow-md p-6">
 						<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
 							<div class="flex-1">
-								<h3 class="text-xl font-semibold mb-2">{evt.title}</h3>
+								<a
+									href="/events/{evt.id}"
+									class="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 hover:underline block"
+								>
+									{evt.title}
+								</a>
 								{#if evt.description}
 									<p class="text-gray-600 mb-2">{evt.description}</p>
 								{/if}
