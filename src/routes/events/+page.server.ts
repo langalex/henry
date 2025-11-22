@@ -24,32 +24,6 @@ export async function load() {
 }
 
 export const actions = {
-	createEvent: async ({ request }) => {
-		const data = await request.formData();
-		const title = data.get('title')?.toString();
-		const description = data.get('description')?.toString() || '';
-		const date = data.get('date')?.toString();
-		const time = data.get('time')?.toString();
-
-		if (!title || !date || !time) {
-			return fail(400, { error: 'Titel, Datum und Uhrzeit sind erforderlich' });
-		}
-
-		try {
-			await db.insert(event).values({
-				id: randomUUID(),
-				title,
-				description,
-				date,
-				time,
-				createdAt: new Date()
-			});
-			return { success: true };
-		} catch (error) {
-			return fail(500, { error: 'Fehler beim Erstellen des Events' });
-		}
-	},
-
 	updateEvent: async ({ request }) => {
 		const data = await request.formData();
 		const id = data.get('id')?.toString();

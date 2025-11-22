@@ -67,79 +67,17 @@
 		</div>
 	{/if}
 
-	<div class="mb-8">
-		<h2 class="text-2xl font-semibold mb-4">Neue Veranstaltung erstellen</h2>
-		<form
-			method="POST"
-			action="?/createEvent"
-			use:enhance={() => {
-				return async ({ update }) => {
-					await update();
-					await handleSubmit();
-				};
-			}}
-			class="bg-white p-6 rounded-lg shadow-md space-y-4"
+	<div class="mb-8 flex justify-between items-center">
+		<h2 class="text-2xl font-semibold">Veranstaltungen</h2>
+		<a
+			href="/events/new"
+			class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 		>
-			<div>
-				<label for="title" class="block text-sm font-medium text-gray-700 mb-1">
-					Titel *
-				</label>
-				<input
-					type="text"
-					id="title"
-					name="title"
-					required
-					class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-				/>
-			</div>
-			<div>
-				<label for="description" class="block text-sm font-medium text-gray-700 mb-1">
-					Beschreibung
-				</label>
-				<textarea
-					id="description"
-					name="description"
-					rows="3"
-					class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-				></textarea>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label for="date" class="block text-sm font-medium text-gray-700 mb-1">
-						Datum *
-					</label>
-					<input
-						type="date"
-						id="date"
-						name="date"
-						required
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-				</div>
-				<div>
-					<label for="time" class="block text-sm font-medium text-gray-700 mb-1">
-						Uhrzeit *
-					</label>
-					<input
-						type="time"
-						id="time"
-						name="time"
-						required
-						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/>
-				</div>
-			</div>
-			<button
-				type="submit"
-				class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-			>
-				Veranstaltung erstellen
-			</button>
-		</form>
+			Neue Veranstaltung erstellen
+		</a>
 	</div>
 
 	<div>
-		<h2 class="text-2xl font-semibold mb-4">Veranstaltungen</h2>
 		{#if data.events.length === 0}
 			<p class="text-gray-600">Keine Veranstaltungen vorhanden.</p>
 		{:else}
@@ -216,7 +154,10 @@
 							>
 								<input type="hidden" name="id" value={evt.id} />
 								<div>
-									<label for="edit-title-{evt.id}" class="block text-sm font-medium text-gray-700 mb-1">
+									<label
+										for="edit-title-{evt.id}"
+										class="block text-sm font-medium text-gray-700 mb-1"
+									>
 										Titel *
 									</label>
 									<input
@@ -240,7 +181,8 @@
 										name="description"
 										rows="3"
 										class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-									>{evt.description || ''}</textarea>
+										>{evt.description || ''}</textarea
+									>
 								</div>
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<div>
@@ -289,7 +231,9 @@
 							onclick={() => (expandedEventId = expandedEventId === evt.id ? null : evt.id)}
 							class="mt-4 text-sm text-blue-600 hover:text-blue-800"
 						>
-							{expandedEventId === evt.id ? 'Weniger anzeigen' : 'Aufgaben und Materialien anzeigen'}
+							{expandedEventId === evt.id
+								? 'Weniger anzeigen'
+								: 'Aufgaben und Materialien anzeigen'}
 						</button>
 
 						{#if expandedEventId === evt.id}
@@ -441,7 +385,8 @@
 																name="description"
 																rows="2"
 																class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-															>{j.description || ''}</textarea>
+																>{j.description || ''}</textarea
+															>
 														</div>
 														<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 															<div>
@@ -511,14 +456,19 @@
 														</div>
 													</form>
 												{:else}
-													<div class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+													<div
+														class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2"
+													>
 														<div class="flex-1">
 															<h5 class="font-medium">{j.title}</h5>
 															{#if j.description}
 																<p class="text-sm text-gray-600 mt-1">{j.description}</p>
 															{/if}
 															<p class="text-sm text-gray-500 mt-1">
-																{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !== 1 ? 'en' : ''})
+																{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !==
+																1
+																	? 'en'
+																	: ''})
 															</p>
 														</div>
 														<div class="flex gap-2">
@@ -660,7 +610,8 @@
 																name="description"
 																rows="2"
 																class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-															>{m.description || ''}</textarea>
+																>{m.description || ''}</textarea
+															>
 														</div>
 														<div class="flex gap-2">
 															<button
@@ -679,7 +630,9 @@
 														</div>
 													</form>
 												{:else}
-													<div class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+													<div
+														class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2"
+													>
 														<div class="flex-1">
 															<h5 class="font-medium">{m.title}</h5>
 															{#if m.description}
@@ -739,4 +692,3 @@
 		min-height: 100vh;
 	}
 </style>
-
