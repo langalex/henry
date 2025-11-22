@@ -1,12 +1,12 @@
 import { db } from '$lib/server/db';
-import { event, job } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { event, job, jobAssignment, user } from '$lib/server/db/schema';
+import { eq, inArray } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	const user = requireAuth({ locals } as any);
+	const currentUser = requireAuth({ locals } as any);
 	const evt = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
 
 	if (evt.length === 0) {
@@ -15,10 +15,47 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const jobs = await db.select().from(job).where(eq(job.eventId, params.id));
 
+	const jobIds = jobs.map((j) => j.id);
+	const assignments =
+		jobIds.length > 0
+			? await db
+					.select({
+						jobId: jobAssignment.jobId,
+						userId: jobAssignment.userId,
+						userName: user.name
+					})
+					.from(jobAssignment)
+					.innerJoin(user, eq(jobAssignment.userId, user.id))
+					.where(inArray(jobAssignment.jobId, jobIds))
+			: [];
+
+	const assignmentsByJob = new Map<string, Array<{ userId: string; userName: string }>>();
+	for (const assignment of assignments) {
+		if (!assignmentsByJob.has(assignment.jobId)) {
+			assignmentsByJob.set(assignment.jobId, []);
+		}
+		assignmentsByJob.get(assignment.jobId)!.push({
+			userId: assignment.userId,
+			userName: assignment.userName
+		});
+	}
+
+	const jobsWithAssignments = jobs.map((j) => {
+		const jobAssignments = assignmentsByJob.get(j.id) || [];
+		const isAssigned = jobAssignments.some((a) => a.userId === currentUser.id);
+		const assignedCount = jobAssignments.length;
+		return {
+			...j,
+			assignments: jobAssignments,
+			isAssigned,
+			assignedCount
+		};
+	});
+
 	return {
 		event: evt[0],
-		jobs,
-		user
+		jobs: jobsWithAssignments,
+		user: currentUser
 	};
 };
 

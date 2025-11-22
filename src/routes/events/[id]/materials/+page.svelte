@@ -32,12 +32,6 @@
 		</div>
 	{/if}
 
-	{#if form?.success}
-		<div class="bg-green-100 border border-green-400 text-green-900 px-4 py-3 rounded mb-4">
-			Erfolgreich gespeichert!
-		</div>
-	{/if}
-
 	<div class="mb-8">
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-2xl font-semibold">Materialien</h2>

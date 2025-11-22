@@ -61,10 +61,21 @@ export const material = sqliteTable('material', {
 	description: text('description')
 });
 
+export const jobAssignment = sqliteTable('job_assignment', {
+	id: text('id').primaryKey(),
+	jobId: text('job_id')
+		.notNull()
+		.references(() => job.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' })
+});
+
 export const userRelations = relations(user, ({ many }) => ({
 	roles: many(userRole),
 	sessions: many(session),
-	emailVerificationTokens: many(emailVerificationToken)
+	emailVerificationTokens: many(emailVerificationToken),
+	jobAssignments: many(jobAssignment)
 }));
 
 export const userRoleRelations = relations(userRole, ({ one }) => ({
@@ -79,10 +90,22 @@ export const eventRelations = relations(event, ({ many }) => ({
 	materials: many(material)
 }));
 
-export const jobRelations = relations(job, ({ one }) => ({
+export const jobRelations = relations(job, ({ one, many }) => ({
 	event: one(event, {
 		fields: [job.eventId],
 		references: [event.id]
+	}),
+	assignments: many(jobAssignment)
+}));
+
+export const jobAssignmentRelations = relations(jobAssignment, ({ one }) => ({
+	job: one(job, {
+		fields: [jobAssignment.jobId],
+		references: [job.id]
+	}),
+	user: one(user, {
+		fields: [jobAssignment.userId],
+		references: [user.id]
 	})
 }));
 
@@ -100,9 +123,11 @@ export type EmailVerificationToken = typeof emailVerificationToken.$inferSelect;
 export type Event = typeof event.$inferSelect;
 export type Job = typeof job.$inferSelect;
 export type Material = typeof material.$inferSelect;
+export type JobAssignment = typeof jobAssignment.$inferSelect;
 export type NewUser = typeof user.$inferInsert;
 export type NewUserRole = typeof userRole.$inferInsert;
 export type NewEmailVerificationToken = typeof emailVerificationToken.$inferInsert;
 export type NewEvent = typeof event.$inferInsert;
 export type NewJob = typeof job.$inferInsert;
 export type NewMaterial = typeof material.$inferInsert;
+export type NewJobAssignment = typeof jobAssignment.$inferInsert;

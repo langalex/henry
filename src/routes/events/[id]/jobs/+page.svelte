@@ -32,12 +32,6 @@
 		</div>
 	{/if}
 
-	{#if form?.success}
-		<div class="bg-green-100 border border-green-400 text-green-900 px-4 py-3 rounded mb-4">
-			Erfolgreich gespeichert!
-		</div>
-	{/if}
-
 	<div class="mb-8">
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-2xl font-semibold">Aufgaben</h2>
@@ -177,13 +171,22 @@
 									<p class="text-sm text-gray-600 mt-1">{j.description}</p>
 								{/if}
 								<p class="text-sm text-gray-500 mt-1">
-									{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !== 1
+									{j.startTime} - {j.endTime} ({j.assignedCount}/{j.numberOfPeople} Person{j.numberOfPeople !==
+									1
 										? 'en'
 										: ''})
 								</p>
+								{#if j.assignments && j.assignments.length > 0}
+									<div class="mt-2">
+										<p class="text-sm font-medium text-gray-700">Zugewiesen:</p>
+										<p class="text-sm text-gray-600">
+											{j.assignments.map((a) => a.userName).join(', ')}
+										</p>
+									</div>
+								{/if}
 							</div>
-							{#if data.user?.roles?.includes('admin')}
-								<div class="flex gap-2">
+							<div class="flex gap-2 flex-col md:flex-row">
+								{#if data.user?.roles?.includes('admin')}
 									<button
 										onclick={() => (editingJobId = j.id)}
 										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -211,8 +214,8 @@
 											Löschen
 										</button>
 									</form>
-								</div>
-							{/if}
+								{/if}
+							</div>
 						</div>
 					{/if}
 				{/each}

@@ -48,12 +48,6 @@
 		</div>
 	{/if}
 
-	{#if form?.success}
-		<div class="bg-green-100 border border-green-400 text-green-900 text700 px-4 py-3 rounded mb-4">
-			Erfolgreich gespeichert!
-		</div>
-	{/if}
-
 	<div class="bg-white rounded-lg shadow-md p-6 mb-8">
 		<div class="flex justify-between items-start mb-4">
 			<div class="flex-1">
@@ -197,16 +191,72 @@
 			{:else}
 				<div class="space-y-3">
 					{#each data.event.jobs as j (j.id)}
-						<div class="p-4 bg-gray-50 rounded-md">
-							<h3 class="font-medium mb-2">{j.title}</h3>
-							{#if j.description}
-								<p class="text-sm text-gray-600 mb-2">{j.description}</p>
-							{/if}
-							<p class="text-sm text-gray-500">
-								{j.startTime} - {j.endTime} ({j.numberOfPeople} Person{j.numberOfPeople !== 1
-									? 'en'
-									: ''})
-							</p>
+						<div
+							class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2"
+						>
+							<div class="flex-1">
+								<h3 class="font-medium mb-2">{j.title}</h3>
+								{#if j.description}
+									<p class="text-sm text-gray-600 mb-2">{j.description}</p>
+								{/if}
+								<p class="text-sm text-gray-500">
+									{j.startTime} - {j.endTime} ({j.assignedCount}/{j.numberOfPeople} Person{j.numberOfPeople !==
+									1
+										? 'en'
+										: ''})
+								</p>
+								{#if j.assignments && j.assignments.length > 0}
+									<div class="mt-2">
+										<p class="text-sm font-medium text-gray-700">Zugewiesen:</p>
+										<p class="text-sm text-gray-600">
+											{j.assignments.map((a) => a.userName).join(', ')}
+										</p>
+									</div>
+								{/if}
+							</div>
+							<div class="flex gap-2">
+								{#if j.isAssigned}
+									<form
+										method="POST"
+										action="?/unassignJob"
+										use:enhance={() => {
+											return async ({ update }) => {
+												await update();
+												await invalidateAll();
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="jobId" value={j.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700"
+										>
+											Von Aufgabe abmelden
+										</button>
+									</form>
+								{:else if j.assignedCount < j.numberOfPeople}
+									<form
+										method="POST"
+										action="?/assignJob"
+										use:enhance={() => {
+											return async ({ update }) => {
+												await update();
+												await invalidateAll();
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="jobId" value={j.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+										>
+											Aufgabe übernehmen
+										</button>
+									</form>
+								{/if}
+							</div>
 						</div>
 					{/each}
 				</div>
