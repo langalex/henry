@@ -83,6 +83,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'job',
 				resourceId: id,
+				resourceName: title,
 				details: { title, startTime, endTime, numberOfPeople }
 			});
 			return { success: true };
@@ -106,6 +107,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'job',
 				resourceId: id,
+				resourceName: jobData?.title || '',
 				details: { title: jobData?.title }
 			});
 			return { success: true };

@@ -40,6 +40,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'material',
 				resourceId: id,
+				resourceName: title,
 				details: { title }
 			});
 			return { success: true };
@@ -63,6 +64,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'material',
 				resourceId: id,
+				resourceName: materialData?.title || '',
 				details: { title: materialData?.title }
 			});
 			return { success: true };

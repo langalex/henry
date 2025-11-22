@@ -8,13 +8,15 @@
 		return new Date(timestamp).toLocaleString('de-DE');
 	}
 
-	function parseDetails(details: string | null) {
-		if (!details) return null;
-		try {
-			return JSON.parse(details);
-		} catch {
-			return details;
-		}
+	function translateAction(action: string): string {
+		const translations: Record<string, string> = {
+			create: 'Erstellen',
+			update: 'Aktualisieren',
+			delete: 'Löschen',
+			assign: 'Zuweisen',
+			unassign: 'Abmelden'
+		};
+		return translations[action] || action;
 	}
 </script>
 
@@ -45,11 +47,6 @@
 					>
 						Ressource
 					</th>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>
-						Details
-					</th>
 				</tr>
 			</thead>
 			<tbody class="bg-white divide-y divide-gray-200">
@@ -59,40 +56,18 @@
 							{formatDate(log.createdAt)}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{#if log.name}
-								{log.name}
-								{#if log.user}
-									<span class="text-gray-500"> ({log.user.email})</span>
-								{:else if log.email}
-									<span class="text-gray-500"> ({log.email})</span>
-								{/if}
-							{:else}
-								<span class="text-gray-400">System</span>
+							{log.name}
+							{#if log.user}
+								<span class="text-gray-500"> ({log.user.email})</span>
+							{:else if log.email}
+								<span class="text-gray-500"> ({log.email})</span>
 							{/if}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{log.action}
+							{translateAction(log.action)}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{#if log.resourceType}
-								{log.resourceType}
-								{#if log.resourceId}
-									<span class="text-gray-500"> ({log.resourceId})</span>
-								{/if}
-							{:else}
-								<span class="text-gray-400">-</span>
-							{/if}
-						</td>
-						<td class="px-6 py-4 text-sm text-gray-900 max-w-xs">
-							{#if log.details}
-								<pre class="text-xs bg-gray-50 p-2 rounded overflow-auto">{JSON.stringify(
-										parseDetails(log.details),
-										null,
-										2
-									)}</pre>
-							{:else}
-								<span class="text-gray-400">-</span>
-							{/if}
+							{log.resourceName}
 						</td>
 					</tr>
 				{/each}

@@ -52,6 +52,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'create', {
 				resourceType: 'job',
 				resourceId: jobId,
+				resourceName: title,
 				details: { title, eventId, startTime, endTime, numberOfPeople }
 			});
 			return { success: true };
@@ -82,6 +83,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'job',
 				resourceId: id,
+				resourceName: title,
 				details: { title, startTime, endTime, numberOfPeople }
 			});
 			return { success: true };
@@ -105,6 +107,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'job',
 				resourceId: id,
+				resourceName: jobData?.title || '',
 				details: { title: jobData?.title }
 			});
 			return { success: true };
@@ -135,6 +138,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'create', {
 				resourceType: 'material',
 				resourceId: materialId,
+				resourceName: title,
 				details: { title, eventId }
 			});
 			return { success: true };
@@ -159,6 +163,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'material',
 				resourceId: id,
+				resourceName: title,
 				details: { title }
 			});
 			return { success: true };
@@ -182,6 +187,7 @@ export const actions = {
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'material',
 				resourceId: id,
+				resourceName: materialData?.title || '',
 				details: { title: materialData?.title }
 			});
 			return { success: true };

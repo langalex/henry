@@ -22,6 +22,7 @@ export async function logAuditEvent(
 	options?: {
 		resourceType?: string;
 		resourceId?: string;
+		resourceName?: string;
 		details?: string | Record<string, unknown>;
 	}
 ) {
@@ -50,6 +51,7 @@ export async function logAuditEvent(
 		action,
 		resourceType: options?.resourceType || null,
 		resourceId: options?.resourceId || null,
+		resourceName: options?.resourceName || null,
 		details: detailsString,
 		createdAt: new Date()
 	});
@@ -65,6 +67,7 @@ export async function getAuditLogs(limit: number = 100, offset: number = 0) {
 			action: table.auditLog.action,
 			resourceType: table.auditLog.resourceType,
 			resourceId: table.auditLog.resourceId,
+			resourceName: table.auditLog.resourceName,
 			details: table.auditLog.details,
 			createdAt: table.auditLog.createdAt,
 			user: {

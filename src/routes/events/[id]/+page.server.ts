@@ -123,6 +123,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'event',
 				resourceId: params.id,
+				resourceName: title,
 				details: { title, date, time }
 			});
 			return { success: true };
@@ -149,6 +150,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'event',
 				resourceId: params.id,
+				resourceName: eventTitle,
 				details: { title: eventTitle }
 			});
 			return { success: true };
@@ -200,6 +202,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'assign', {
 				resourceType: 'job',
 				resourceId: jobId,
+				resourceName: jobData.title,
 				details: { userId: currentUser.id, userName: currentUser.name }
 			});
 
@@ -219,12 +222,14 @@ export const actions: Actions = {
 		}
 
 		try {
+			const [jobData] = await db.select().from(job).where(eq(job.id, jobId)).limit(1);
 			await db
 				.delete(jobAssignment)
 				.where(and(eq(jobAssignment.jobId, jobId), eq(jobAssignment.userId, currentUser.id)));
 			await logAuditEvent({ request, locals } as any, 'unassign', {
 				resourceType: 'job',
 				resourceId: jobId,
+				resourceName: jobData?.title || '',
 				details: { userId: currentUser.id, userName: currentUser.name }
 			});
 			return { success: true };
@@ -276,6 +281,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'assign', {
 				resourceType: 'material',
 				resourceId: materialId,
+				resourceName: materialData.title,
 				details: { userId: currentUser.id, userName: currentUser.name }
 			});
 
@@ -295,6 +301,11 @@ export const actions: Actions = {
 		}
 
 		try {
+			const [materialData] = await db
+				.select()
+				.from(material)
+				.where(eq(material.id, materialId))
+				.limit(1);
 			await db
 				.delete(materialAssignment)
 				.where(
@@ -306,6 +317,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'unassign', {
 				resourceType: 'material',
 				resourceId: materialId,
+				resourceName: materialData?.title || '',
 				details: { userId: currentUser.id, userName: currentUser.name }
 			});
 			return { success: true };

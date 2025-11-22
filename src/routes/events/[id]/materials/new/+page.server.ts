@@ -43,6 +43,7 @@ export const actions: Actions = {
 			await logAuditEvent({ request, locals } as any, 'create', {
 				resourceType: 'material',
 				resourceId: materialId,
+				resourceName: title,
 				details: { title, eventId: params.id }
 			});
 			throw redirect(303, `/events/${params.id}/materials`);

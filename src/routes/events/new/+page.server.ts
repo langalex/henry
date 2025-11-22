@@ -39,6 +39,7 @@ export const actions = {
 				{
 					resourceType: 'event',
 					resourceId: eventId,
+					resourceName: title,
 					details: { title, date, time }
 				}
 			);
