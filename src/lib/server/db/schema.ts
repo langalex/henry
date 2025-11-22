@@ -71,11 +71,22 @@ export const jobAssignment = sqliteTable('job_assignment', {
 		.references(() => user.id, { onDelete: 'cascade' })
 });
 
+export const materialAssignment = sqliteTable('material_assignment', {
+	id: text('id').primaryKey(),
+	materialId: text('material_id')
+		.notNull()
+		.references(() => material.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' })
+});
+
 export const userRelations = relations(user, ({ many }) => ({
 	roles: many(userRole),
 	sessions: many(session),
 	emailVerificationTokens: many(emailVerificationToken),
-	jobAssignments: many(jobAssignment)
+	jobAssignments: many(jobAssignment),
+	materialAssignments: many(materialAssignment)
 }));
 
 export const userRoleRelations = relations(userRole, ({ one }) => ({
@@ -109,10 +120,22 @@ export const jobAssignmentRelations = relations(jobAssignment, ({ one }) => ({
 	})
 }));
 
-export const materialRelations = relations(material, ({ one }) => ({
+export const materialRelations = relations(material, ({ one, many }) => ({
 	event: one(event, {
 		fields: [material.eventId],
 		references: [event.id]
+	}),
+	assignments: many(materialAssignment)
+}));
+
+export const materialAssignmentRelations = relations(materialAssignment, ({ one }) => ({
+	material: one(material, {
+		fields: [materialAssignment.materialId],
+		references: [material.id]
+	}),
+	user: one(user, {
+		fields: [materialAssignment.userId],
+		references: [user.id]
 	})
 }));
 
@@ -124,6 +147,7 @@ export type Event = typeof event.$inferSelect;
 export type Job = typeof job.$inferSelect;
 export type Material = typeof material.$inferSelect;
 export type JobAssignment = typeof jobAssignment.$inferSelect;
+export type MaterialAssignment = typeof materialAssignment.$inferSelect;
 export type NewUser = typeof user.$inferInsert;
 export type NewUserRole = typeof userRole.$inferInsert;
 export type NewEmailVerificationToken = typeof emailVerificationToken.$inferInsert;
@@ -131,3 +155,4 @@ export type NewEvent = typeof event.$inferInsert;
 export type NewJob = typeof job.$inferInsert;
 export type NewMaterial = typeof material.$inferInsert;
 export type NewJobAssignment = typeof jobAssignment.$inferInsert;
+export type NewMaterialAssignment = typeof materialAssignment.$inferInsert;

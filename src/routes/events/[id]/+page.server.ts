@@ -1,5 +1,12 @@
 import { db } from '$lib/server/db';
-import { event, job, material, jobAssignment, user } from '$lib/server/db/schema';
+import {
+	event,
+	job,
+	material,
+	jobAssignment,
+	materialAssignment,
+	user
+} from '$lib/server/db/schema';
 import { eq, and, inArray } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
@@ -56,8 +63,43 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		};
 	});
 
+	const materialIds = materials.map((m) => m.id);
+	const materialAssignments =
+		materialIds.length > 0
+			? await db
+					.select({
+						materialId: materialAssignment.materialId,
+						userId: materialAssignment.userId,
+						userName: user.name
+					})
+					.from(materialAssignment)
+					.innerJoin(user, eq(materialAssignment.userId, user.id))
+					.where(inArray(materialAssignment.materialId, materialIds))
+			: [];
+
+	const assignmentsByMaterial = new Map<string, Array<{ userId: string; userName: string }>>();
+	for (const assignment of materialAssignments) {
+		if (!assignmentsByMaterial.has(assignment.materialId)) {
+			assignmentsByMaterial.set(assignment.materialId, []);
+		}
+		assignmentsByMaterial.get(assignment.materialId)!.push({
+			userId: assignment.userId,
+			userName: assignment.userName
+		});
+	}
+
+	const materialsWithAssignments = materials.map((m) => {
+		const materialAssignments = assignmentsByMaterial.get(m.id) || [];
+		const isAssigned = materialAssignments.some((a) => a.userId === currentUser.id);
+		return {
+			...m,
+			assignments: materialAssignments,
+			isAssigned
+		};
+	});
+
 	return {
-		event: { ...evt[0], jobs: jobsWithAssignments, materials },
+		event: { ...evt[0], jobs: jobsWithAssignments, materials: materialsWithAssignments },
 		user: currentUser
 	};
 };
@@ -165,6 +207,76 @@ export const actions: Actions = {
 			return { success: true };
 		} catch (err) {
 			return fail(500, { error: 'Fehler beim Abmelden von der Aufgabe' });
+		}
+	},
+
+	assignMaterial: async ({ request, locals }) => {
+		const currentUser = requireAuth({ locals } as any);
+		const data = await request.formData();
+		const materialId = data.get('materialId')?.toString();
+
+		if (!materialId) {
+			return fail(400, { error: 'Material-ID erforderlich' });
+		}
+
+		try {
+			const [materialData] = await db
+				.select()
+				.from(material)
+				.where(eq(material.id, materialId))
+				.limit(1);
+			if (!materialData) {
+				return fail(404, { error: 'Material nicht gefunden' });
+			}
+
+			const existingAssignment = await db
+				.select()
+				.from(materialAssignment)
+				.where(
+					and(
+						eq(materialAssignment.materialId, materialId),
+						eq(materialAssignment.userId, currentUser.id)
+					)
+				)
+				.limit(1);
+
+			if (existingAssignment.length > 0) {
+				return fail(400, { error: 'Sie sind bereits diesem Material zugewiesen' });
+			}
+
+			await db.insert(materialAssignment).values({
+				id: randomUUID(),
+				materialId,
+				userId: currentUser.id
+			});
+
+			return { success: true };
+		} catch (err) {
+			return fail(500, { error: 'Fehler beim Zuweisen des Materials' });
+		}
+	},
+
+	unassignMaterial: async ({ request, locals }) => {
+		const currentUser = requireAuth({ locals } as any);
+		const data = await request.formData();
+		const materialId = data.get('materialId')?.toString();
+
+		if (!materialId) {
+			return fail(400, { error: 'Material-ID erforderlich' });
+		}
+
+		try {
+			await db
+				.delete(materialAssignment)
+				.where(
+					and(
+						eq(materialAssignment.materialId, materialId),
+						eq(materialAssignment.userId, currentUser.id)
+					)
+				);
+			return { success: true };
+		} catch (err) {
+			return fail(500, { error: 'Fehler beim Abmelden vom Material' });
 		}
 	}
 };

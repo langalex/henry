@@ -278,11 +278,66 @@
 			{:else}
 				<div class="space-y-3">
 					{#each data.event.materials as m (m.id)}
-						<div class="p-4 bg-gray-50 rounded-md">
-							<h3 class="font-medium mb-2">{m.title}</h3>
-							{#if m.description}
-								<p class="text-sm text-gray-600">{m.description}</p>
-							{/if}
+						<div
+							class="p-4 bg-gray-50 rounded-md flex flex-col md:flex-row md:items-start md:justify-between gap-2"
+						>
+							<div class="flex-1">
+								<h3 class="font-medium mb-2">{m.title}</h3>
+								{#if m.description}
+									<p class="text-sm text-gray-600 mb-2">{m.description}</p>
+								{/if}
+								{#if m.assignments && m.assignments.length > 0}
+									<div class="mt-2">
+										<p class="text-sm font-medium text-gray-700">Zugewiesen:</p>
+										<p class="text-sm text-gray-600">
+											{m.assignments.map((a) => a.userName).join(', ')}
+										</p>
+									</div>
+								{/if}
+							</div>
+							<div class="flex gap-2">
+								{#if m.isAssigned}
+									<form
+										method="POST"
+										action="?/unassignMaterial"
+										use:enhance={() => {
+											return async ({ update }) => {
+												await update();
+												await invalidateAll();
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="materialId" value={m.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700"
+										>
+											Doch nicht mitbringen
+										</button>
+									</form>
+								{:else}
+									<form
+										method="POST"
+										action="?/assignMaterial"
+										use:enhance={() => {
+											return async ({ update }) => {
+												await update();
+												await invalidateAll();
+											};
+										}}
+										class="inline"
+									>
+										<input type="hidden" name="materialId" value={m.id} />
+										<button
+											type="submit"
+											class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+										>
+											Material mitbringen
+										</button>
+									</form>
+								{/if}
+							</div>
 						</div>
 					{/each}
 				</div>
