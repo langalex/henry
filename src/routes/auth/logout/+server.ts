@@ -10,4 +10,3 @@ export const POST: RequestHandler = async ({ locals, cookies }) => {
 
 	throw redirect(302, '/auth/login');
 };
-

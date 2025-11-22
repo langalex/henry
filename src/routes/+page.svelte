@@ -35,7 +35,8 @@
 			use:enhance={() => {
 				return async ({ result }) => {
 					if (result?.type === 'success') {
-						message = result.data?.message || 'Registrierung erfolgreich. Bitte prüfen Sie Ihre E-Mails.';
+						message =
+							result.data?.message || 'Registrierung erfolgreich. Bitte prüfen Sie Ihre E-Mails.';
 						error = null;
 					} else if (result?.type === 'failure') {
 						error = result.data?.error || 'Fehler bei der Registrierung';
@@ -75,4 +76,3 @@
 		</form>
 	</div>
 {/if}
-

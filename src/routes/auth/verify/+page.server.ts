@@ -20,4 +20,3 @@ export async function load({ url, cookies }) {
 
 	throw redirect(302, '/events');
 }
-

@@ -28,4 +28,3 @@ export const actions = {
 		return { success: true, message: 'Login-Link wurde per E-Mail gesendet' };
 	}
 };
-

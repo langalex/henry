@@ -1,0 +1,107 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { PageData, ActionData } from './$types';
+
+	let { data, form }: { data: PageData; form: ActionData } = $props();
+
+	const availableRoles = ['admin', 'parent'];
+	let selectedRoles = $state<string[]>(data.user.roles || []);
+</script>
+
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+	<h1 class="text-3xl font-bold mb-8">Benutzer bearbeiten</h1>
+
+	{#if form?.error}
+		<div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+			{form.error}
+		</div>
+	{/if}
+
+	<form method="POST" action="?/update" use:enhance>
+		<div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+			<div>
+				<label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+					Name *
+				</label>
+				<input
+					type="text"
+					id="name"
+					name="name"
+					value={data.user.name}
+					required
+					class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+				/>
+			</div>
+
+			<div>
+				<label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+					E-Mail *
+				</label>
+				<input
+					type="email"
+					id="email"
+					name="email"
+					value={data.user.email}
+					required
+					class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+				/>
+			</div>
+
+			<div>
+				<div class="block text-sm font-medium text-gray-700 mb-2">Rollen</div>
+				<div class="space-y-2">
+					{#each availableRoles as role (role)}
+						<label class="flex items-center">
+							<input
+								type="checkbox"
+								name="roles"
+								value={role}
+								bind:group={selectedRoles}
+								class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+							/>
+							<span class="ml-2 text-sm text-gray-700">{role}</span>
+						</label>
+					{/each}
+				</div>
+			</div>
+
+			<div class="flex gap-4">
+				<button
+					type="submit"
+					class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+				>
+					Speichern
+				</button>
+				<a
+					href="/users"
+					class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 inline-block text-center"
+				>
+					Abbrechen
+				</a>
+			</div>
+		</div>
+	</form>
+
+	<div class="mt-8 pt-8 border-t border-gray-200">
+		<form method="POST" action="?/delete" use:enhance>
+			<button
+				type="submit"
+				class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+				onclick={(e) => {
+					if (!confirm('Möchten Sie diesen Benutzer wirklich löschen?')) {
+						e.preventDefault();
+					}
+				}}
+			>
+				Benutzer löschen
+			</button>
+		</form>
+	</div>
+</div>
+
+<style>
+	.container {
+		min-height: 100vh;
+	}
+</style>
+
