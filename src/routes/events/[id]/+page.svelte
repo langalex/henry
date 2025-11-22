@@ -35,7 +35,15 @@
 
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 		<div>
-			<h2 class="text-2xl font-semibold mb-4">Aufgaben</h2>
+			<div class="flex justify-between items-center mb-4">
+				<h2 class="text-2xl font-semibold">Aufgaben</h2>
+				<a
+					href="/events/{data.event.id}/jobs"
+					class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+				>
+					Verwalten
+				</a>
+			</div>
 			{#if data.event.jobs.length === 0}
 				<p class="text-gray-600 text-sm">Keine Aufgaben vorhanden.</p>
 			{:else}
@@ -58,7 +66,15 @@
 		</div>
 
 		<div>
-			<h2 class="text-2xl font-semibold mb-4">Materialien</h2>
+			<div class="flex justify-between items-center mb-4">
+				<h2 class="text-2xl font-semibold">Materialien</h2>
+				<a
+					href="/events/{data.event.id}/materials"
+					class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+				>
+					Verwalten
+				</a>
+			</div>
 			{#if data.event.materials.length === 0}
 				<p class="text-gray-600 text-sm">Keine Materialien vorhanden.</p>
 			{:else}
