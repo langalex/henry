@@ -81,12 +81,25 @@ export const materialAssignment = sqliteTable('material_assignment', {
 		.references(() => user.id, { onDelete: 'cascade' })
 });
 
+export const auditLog = sqliteTable('audit_log', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
+	action: text('action').notNull(),
+	resourceType: text('resource_type'),
+	resourceId: text('resource_id'),
+	details: text('details'),
+	ipAddress: text('ip_address'),
+	userAgent: text('user_agent'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+});
+
 export const userRelations = relations(user, ({ many }) => ({
 	roles: many(userRole),
 	sessions: many(session),
 	emailVerificationTokens: many(emailVerificationToken),
 	jobAssignments: many(jobAssignment),
-	materialAssignments: many(materialAssignment)
+	materialAssignments: many(materialAssignment),
+	auditLogs: many(auditLog)
 }));
 
 export const userRoleRelations = relations(userRole, ({ one }) => ({
@@ -139,6 +152,13 @@ export const materialAssignmentRelations = relations(materialAssignment, ({ one 
 	})
 }));
 
+export const auditLogRelations = relations(auditLog, ({ one }) => ({
+	user: one(user, {
+		fields: [auditLog.userId],
+		references: [user.id]
+	})
+}));
+
 export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
 export type UserRole = typeof userRole.$inferSelect;
@@ -156,3 +176,5 @@ export type NewJob = typeof job.$inferInsert;
 export type NewMaterial = typeof material.$inferInsert;
 export type NewJobAssignment = typeof jobAssignment.$inferInsert;
 export type NewMaterialAssignment = typeof materialAssignment.$inferInsert;
+export type AuditLog = typeof auditLog.$inferSelect;
+export type NewAuditLog = typeof auditLog.$inferInsert;

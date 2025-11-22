@@ -22,6 +22,7 @@
 					<a href="/events" class="hover:text-gray-300">Veranstaltungen</a>
 					{#if data.user.roles?.includes('admin')}
 						<a href="/users" class="hover:text-gray-300">Benutzer</a>
+						<a href="/audit-log" class="hover:text-gray-300">Protokoll</a>
 					{/if}
 				</div>
 			</div>
