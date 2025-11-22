@@ -122,6 +122,12 @@
 							</div>
 							{#if data.user?.roles?.includes('admin')}
 								<div class="flex gap-2">
+									<a
+										href="/events/{data.event.id}/materials/{m.id}/assign"
+										class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+									>
+										Eltern zuweisen
+									</a>
 									<button
 										onclick={() => (editingMaterialId = m.id)}
 										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"

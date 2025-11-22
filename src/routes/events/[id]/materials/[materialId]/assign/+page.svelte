@@ -13,15 +13,15 @@
 <div class="container mx-auto px-4 py-8 max-w-6xl">
 	<div class="mb-6">
 		<a
-			href="/events/{data.event.id}/jobs"
+			href="/events/{data.event.id}/materials"
 			class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2"
 		>
-			← Zurück zu Aufgaben
+			← Zurück zu Materialien
 		</a>
 	</div>
 
-	<h1 class="text-3xl font-bold mb-2">Eltern zuweisen: {data.job.title}</h1>
-	<p class="text-gray-600 mb-8">Verwalte die Zuweisungen für diese Aufgabe</p>
+	<h1 class="text-3xl font-bold mb-2">Eltern zuweisen: {data.material.title}</h1>
+	<p class="text-gray-600 mb-8">Verwalte die Zuweisungen für dieses Material</p>
 
 	{#if form?.error}
 		<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
