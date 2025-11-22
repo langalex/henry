@@ -24,52 +24,6 @@ export async function load() {
 }
 
 export const actions = {
-	updateEvent: async ({ request }) => {
-		const data = await request.formData();
-		const id = data.get('id')?.toString();
-		const title = data.get('title')?.toString();
-		const description = data.get('description')?.toString() || '';
-		const date = data.get('date')?.toString();
-		const time = data.get('time')?.toString();
-
-		if (!id || !title || !date || !time) {
-			return fail(400, { error: 'Alle Felder sind erforderlich' });
-		}
-
-		try {
-			await db.update(event).set({ title, description, date, time }).where(eq(event.id, id));
-			return { success: true };
-		} catch (error) {
-			return fail(500, { error: 'Fehler beim Aktualisieren des Events' });
-		}
-	},
-
-	deleteEvent: async ({ request }) => {
-		const data = await request.formData();
-		const id = data.get('id')?.toString();
-
-		if (!id) {
-			return fail(400, { error: 'Event-ID erforderlich' });
-		}
-
-		const evt = await db.select().from(event).where(eq(event.id, id)).limit(1);
-		if (evt.length === 0) {
-			return fail(404, { error: 'Event nicht gefunden' });
-		}
-
-		const eventDateTime = new Date(`${evt[0].date}T${evt[0].time}`);
-		if (eventDateTime < new Date()) {
-			return fail(400, { error: 'Nur zukünftige Events können gelöscht werden' });
-		}
-
-		try {
-			await db.delete(event).where(eq(event.id, id));
-			return { success: true };
-		} catch (error) {
-			return fail(500, { error: 'Fehler beim Löschen des Events' });
-		}
-	},
-
 	createJob: async ({ request }) => {
 		const data = await request.formData();
 		const eventId = data.get('eventId')?.toString();
