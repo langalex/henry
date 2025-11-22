@@ -88,8 +88,6 @@ export const auditLog = sqliteTable('audit_log', {
 	resourceType: text('resource_type'),
 	resourceId: text('resource_id'),
 	details: text('details'),
-	ipAddress: text('ip_address'),
-	userAgent: text('user_agent'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 });
 

@@ -50,11 +50,6 @@
 					>
 						Details
 					</th>
-					<th
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>
-						IP-Adresse
-					</th>
 				</tr>
 			</thead>
 			<tbody class="bg-white divide-y divide-gray-200">
@@ -93,9 +88,6 @@
 							{:else}
 								<span class="text-gray-400">-</span>
 							{/if}
-						</td>
-						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{log.ipAddress || '-'}
 						</td>
 					</tr>
 				{/each}

@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import type { RequestEvent } from '@sveltejs/kit';
 
 export async function logAuditEvent(
-	event: RequestEvent | { request: Request; locals: App.Locals; getClientAddress?: () => string },
+	event: RequestEvent | { request: Request; locals: App.Locals },
 	action: string,
 	options?: {
 		resourceType?: string;
@@ -14,14 +14,12 @@ export async function logAuditEvent(
 	}
 ) {
 	const userId = event.locals.user?.id || null;
-	const ipAddress =
-		'getClientAddress' in event && event.getClientAddress ? event.getClientAddress() : null;
-	const userAgent = event.request.headers.get('user-agent') || null;
 
-	const detailsString =
-		options?.details && typeof options.details === 'object'
+	const detailsString: string | null = options?.details
+		? typeof options.details === 'object'
 			? JSON.stringify(options.details)
-			: options?.details || null;
+			: options.details
+		: null;
 
 	await db.insert(table.auditLog).values({
 		id: randomUUID(),
@@ -30,8 +28,6 @@ export async function logAuditEvent(
 		resourceType: options?.resourceType || null,
 		resourceId: options?.resourceId || null,
 		details: detailsString,
-		ipAddress,
-		userAgent,
 		createdAt: new Date()
 	});
 }
@@ -45,8 +41,6 @@ export async function getAuditLogs(limit: number = 100, offset: number = 0) {
 			resourceType: table.auditLog.resourceType,
 			resourceId: table.auditLog.resourceId,
 			details: table.auditLog.details,
-			ipAddress: table.auditLog.ipAddress,
-			userAgent: table.auditLog.userAgent,
 			createdAt: table.auditLog.createdAt,
 			user: {
 				name: table.user.name,
