@@ -31,5 +31,5 @@ ENV PORT=4000
 ENV HOST=0.0.0.0
 VOLUME /db
 
-CMD ["sh", "-c", "npm run db:push --force && node build"]
+CMD ["node", "build"]
 
