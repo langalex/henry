@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 ENV DATABASE_URL=/db/local.db
@@ -11,7 +11,7 @@ RUN mkdir /db
 RUN npm run prepare
 RUN npm run build
 
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 
 WORKDIR /app
 
