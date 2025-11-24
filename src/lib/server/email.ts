@@ -30,12 +30,13 @@ export async function sendLoginLink(email: string, token: string) {
 
 		await transporter.email
 			.route('outgoing')
-			.from('me+henry@langalex.org')
+			.from('Klasse 1/2b <me+henry@langalex.org>')
 			.to(email)
 			.subject('Login-Link')
 			.text(`Klicke auf diesen Link, um dich anzumelden: ${loginUrl}`)
 			.html(
 				`
+					<h1>Klasse 1/2b</h1>
 					<p>Klicke auf diesen Link, um dich anzumelden:</p>
 					<p><a href="${loginUrl}">${loginUrl}</a></p>
 					<p>Dieser Link ist 1 Stunde gültig.</p>
