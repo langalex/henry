@@ -6,7 +6,10 @@
 </script>
 
 <div class="max-w-md mx-auto mt-8">
-	<h1 class="text-2xl font-bold mb-4">Anmelden</h1>
+	<h1 class="text-2xl font-bold mb-4">Klasse 1/2B</h1>
+	<p class="text-gray-600 mb-4">
+		Bitte gib deine E-Mail-Adresse ein, um einen Login-Link zu erhalten.
+	</p>
 
 	{#if message}
 		<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
