@@ -2,13 +2,14 @@ import { dev } from '$app/environment';
 import { env } from '$env/dynamic/public';
 import { env as privateEnv } from '$env/dynamic/private';
 import { Lettermint } from 'lettermint';
+const apiToken = privateEnv.LETTERMINT_API_TOKEN;
 
 function createTransporter(): Lettermint {
-	if (!privateEnv.LETTERMINT_API_TOKEN) {
+	if (!apiToken) {
 		throw new Error('LETTERMINT_API_TOKEN is not set');
 	}
 	return new Lettermint({
-		apiToken: privateEnv.LETTERMINT_API_TOKEN
+		apiToken
 	});
 }
 
@@ -28,6 +29,7 @@ export async function sendLoginLink(email: string, token: string) {
 		const transporter = createTransporter();
 
 		await transporter.email
+			.route('outgoing')
 			.from('me+henry@langalex.org')
 			.to(email)
 			.subject('Login-Link')
@@ -42,6 +44,7 @@ export async function sendLoginLink(email: string, token: string) {
 			.send();
 	} catch (error) {
 		console.error('Failed to send email:', error);
+		console.error('API Token:', apiToken);
 		throw new Error('Failed to send email');
 	}
 }
