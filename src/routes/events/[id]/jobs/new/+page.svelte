@@ -9,7 +9,7 @@
 	<div class="mb-6">
 		<a
 			href="/events/{data.event.id}/jobs"
-			class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2"
+			class="text-link hover:text-link-hover mb-4 inline-flex items-center gap-2"
 		>
 			← Zurück zu Aufgaben
 		</a>
@@ -30,9 +30,7 @@
 		class="bg-white p-6 rounded-lg shadow-md space-y-4"
 	>
 		<div>
-			<label for="job-title" class="block text-sm font-medium text-gray-700 mb-1">
-				Titel *
-			</label>
+			<label for="job-title" class="block text-sm font-medium text-gray-700 mb-1"> Titel * </label>
 			<input
 				type="text"
 				id="job-title"
@@ -42,10 +40,7 @@
 			/>
 		</div>
 		<div>
-			<label
-				for="job-description"
-				class="block text-sm font-medium text-gray-700 mb-1"
-			>
+			<label for="job-description" class="block text-sm font-medium text-gray-700 mb-1">
 				Beschreibung
 			</label>
 			<textarea
@@ -57,10 +52,7 @@
 		</div>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<div>
-				<label
-					for="job-start"
-					class="block text-sm font-medium text-gray-700 mb-1"
-				>
+				<label for="job-start" class="block text-sm font-medium text-gray-700 mb-1">
 					Startzeit *
 				</label>
 				<input
@@ -84,10 +76,7 @@
 				/>
 			</div>
 			<div>
-				<label
-					for="job-people"
-					class="block text-sm font-medium text-gray-700 mb-1"
-				>
+				<label for="job-people" class="block text-sm font-medium text-gray-700 mb-1">
 					Anzahl Personen *
 				</label>
 				<input
@@ -103,7 +92,7 @@
 		<div class="flex gap-4">
 			<button
 				type="submit"
-				class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+				class="px-6 py-2 bg-success text-white rounded-md hover:bg-success-dark focus:outline-none focus:ring-2 focus:ring-success"
 			>
 				Aufgabe hinzufügen
 			</button>
@@ -122,4 +111,3 @@
 		min-height: 100vh;
 	}
 </style>
-

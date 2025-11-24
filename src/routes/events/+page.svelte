@@ -47,7 +47,7 @@
 		{#if data.user?.roles?.includes('admin')}
 			<a
 				href="/events/new"
-				class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+				class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
 			>
 				Neue Veranstaltung anlegen
 			</a>
@@ -66,7 +66,7 @@
 							<div>
 								<a
 									href="/events/{evt.id}"
-									class="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 hover:underline block"
+									class="text-xl font-semibold mb-2 text-link hover:text-link-hover hover:underline block"
 								>
 									{evt.title}
 								</a>
@@ -90,7 +90,7 @@
 							<div>
 								<a
 									href="/events/{evt.id}"
-									class="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 hover:underline block"
+									class="text-xl font-semibold mb-2 text-link hover:text-link-hover hover:underline block"
 								>
 									{evt.title}
 								</a>

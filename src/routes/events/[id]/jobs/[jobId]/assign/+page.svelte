@@ -14,7 +14,7 @@
 	<div class="mb-6">
 		<a
 			href="/events/{data.event.id}/jobs"
-			class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2"
+			class="text-link hover:text-link-hover mb-4 inline-flex items-center gap-2"
 		>
 			← Zurück zu Aufgaben
 		</a>
@@ -59,7 +59,7 @@
 									<input type="hidden" name="userId" value={u.id} />
 									<button
 										type="submit"
-										class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+										class="px-4 py-2 bg-error text-white rounded-md hover:bg-error-dark"
 									>
 										Entfernen
 									</button>
@@ -79,7 +79,7 @@
 									<input type="hidden" name="userId" value={u.id} />
 									<button
 										type="submit"
-										class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+										class="px-4 py-2 bg-success text-white rounded-md hover:bg-success-dark"
 									>
 										Zuweisen
 									</button>

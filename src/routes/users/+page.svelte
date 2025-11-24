@@ -11,7 +11,7 @@
 		<h2 class="text-2xl font-semibold">Alle Benutzer</h2>
 		<a
 			href="/users/new"
-			class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+			class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
 		>
 			Neuen Benutzer erstellen
 		</a>
@@ -25,16 +25,24 @@
 				<table class="min-w-full divide-y divide-gray-200">
 					<thead class="bg-gray-50">
 						<tr>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
 								Name
 							</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
 								E-Mail
 							</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
 								Rollen
 							</th>
-							<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
 								Aktionen
 							</th>
 						</tr>
@@ -51,7 +59,7 @@
 										<div class="flex flex-wrap gap-2">
 											{#each u.roles as role}
 												<span
-													class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+													class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light text-primary-dark"
 												>
 													{role}
 												</span>
@@ -62,10 +70,7 @@
 									{/if}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-									<a
-										href="/users/{u.id}"
-										class="text-blue-600 hover:text-blue-900 hover:underline"
-									>
+									<a href="/users/{u.id}" class="text-link hover:text-link-hover hover:underline">
 										Bearbeiten
 									</a>
 								</td>
@@ -83,4 +88,3 @@
 		min-height: 100vh;
 	}
 </style>
-

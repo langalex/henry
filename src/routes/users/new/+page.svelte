@@ -20,9 +20,7 @@
 	<form method="POST" action="?/create" use:enhance>
 		<div class="bg-white rounded-lg shadow-md p-6 space-y-6">
 			<div>
-				<label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-					Name *
-				</label>
+				<label for="name" class="block text-sm font-medium text-gray-700 mb-2"> Name * </label>
 				<input
 					type="text"
 					id="name"
@@ -33,9 +31,7 @@
 			</div>
 
 			<div>
-				<label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-					E-Mail *
-				</label>
+				<label for="email" class="block text-sm font-medium text-gray-700 mb-2"> E-Mail * </label>
 				<input
 					type="email"
 					id="email"
@@ -66,13 +62,13 @@
 			<div class="flex gap-4">
 				<button
 					type="submit"
-					class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
 				>
 					Erstellen
 				</button>
 				<a
 					href="/users"
-					class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 inline-block text-center"
+					class="px-6 py-2 bg-secondary-light text-text rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary inline-block text-center"
 				>
 					Abbrechen
 				</a>
@@ -86,4 +82,3 @@
 		min-height: 100vh;
 	}
 </style>
-

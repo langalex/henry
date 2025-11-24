@@ -9,7 +9,7 @@
 	<div class="mb-6">
 		<a
 			href="/events/{data.event.id}/materials"
-			class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2"
+			class="text-link hover:text-link-hover mb-4 inline-flex items-center gap-2"
 		>
 			← Zurück zu Materialien
 		</a>
@@ -30,10 +30,7 @@
 		class="bg-white p-6 rounded-lg shadow-md space-y-4"
 	>
 		<div>
-			<label
-				for="material-title"
-				class="block text-sm font-medium text-gray-700 mb-1"
-			>
+			<label for="material-title" class="block text-sm font-medium text-gray-700 mb-1">
 				Titel *
 			</label>
 			<input
@@ -45,10 +42,7 @@
 			/>
 		</div>
 		<div>
-			<label
-				for="material-description"
-				class="block text-sm font-medium text-gray-700 mb-1"
-			>
+			<label for="material-description" class="block text-sm font-medium text-gray-700 mb-1">
 				Beschreibung
 			</label>
 			<textarea
@@ -61,7 +55,7 @@
 		<div class="flex gap-4">
 			<button
 				type="submit"
-				class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+				class="px-6 py-2 bg-success text-white rounded-md hover:bg-success-dark focus:outline-none focus:ring-2 focus:ring-success"
 			>
 				Material hinzufügen
 			</button>
@@ -80,4 +74,3 @@
 		min-height: 100vh;
 	}
 </style>
-

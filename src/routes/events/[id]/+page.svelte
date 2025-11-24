@@ -37,7 +37,7 @@
 
 <div class="container mx-auto px-4 py-8 max-w-6xl">
 	<div class="mb-6">
-		<a href="/events" class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2">
+		<a href="/events" class="text-link hover:text-link-hover mb-4 inline-flex items-center gap-2">
 			← Zurück zur Übersicht
 		</a>
 	</div>
@@ -69,7 +69,7 @@
 					{:else}
 						<button
 							onclick={() => (editing = true)}
-							class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+							class="px-4 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary-hover"
 						>
 							Bearbeiten
 						</button>
@@ -88,7 +88,7 @@
 						>
 							<button
 								type="submit"
-								class="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+								class="px-4 py-2 text-sm bg-error text-white rounded-md hover:bg-error-dark"
 							>
 								Löschen
 							</button>
@@ -163,7 +163,10 @@
 						/>
 					</div>
 				</div>
-				<button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+				<button
+					type="submit"
+					class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover"
+				>
 					Speichern
 				</button>
 			</form>
@@ -182,7 +185,7 @@
 				{#if data.user?.roles?.includes('admin')}
 					<a
 						href="/events/{data.event.id}/jobs"
-						class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+						class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover text-sm"
 					>
 						Verwalten
 					</a>
@@ -232,7 +235,7 @@
 										<input type="hidden" name="jobId" value={j.id} />
 										<button
 											type="submit"
-											class="px-3 py-1 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700"
+											class="px-3 py-1 text-sm bg-warning text-white rounded-md hover:bg-warning-dark"
 										>
 											Von Aufgabe abmelden
 										</button>
@@ -252,7 +255,7 @@
 										<input type="hidden" name="jobId" value={j.id} />
 										<button
 											type="submit"
-											class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+											class="px-3 py-1 text-sm bg-success text-white rounded-md hover:bg-success-dark"
 										>
 											Aufgabe übernehmen
 										</button>
@@ -271,7 +274,7 @@
 				{#if data.user?.roles?.includes('admin')}
 					<a
 						href="/events/{data.event.id}/materials"
-						class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+						class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover text-sm"
 					>
 						Verwalten
 					</a>
@@ -315,7 +318,7 @@
 										<input type="hidden" name="materialId" value={m.id} />
 										<button
 											type="submit"
-											class="px-3 py-1 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700"
+											class="px-3 py-1 text-sm bg-warning text-white rounded-md hover:bg-warning-dark"
 										>
 											Doch nicht mitbringen
 										</button>
@@ -335,7 +338,7 @@
 										<input type="hidden" name="materialId" value={m.id} />
 										<button
 											type="submit"
-											class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+											class="px-3 py-1 text-sm bg-success text-white rounded-md hover:bg-success-dark"
 										>
 											Material mitbringen
 										</button>

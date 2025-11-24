@@ -17,7 +17,7 @@
 	<div class="mb-6">
 		<a
 			href="/events/{data.event.id}"
-			class="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center gap-2"
+			class="text-link hover:text-link-hover mb-4 inline-flex items-center gap-2"
 		>
 			← Zurück zur Veranstaltung
 		</a>
@@ -38,7 +38,7 @@
 			{#if data.user?.roles?.includes('admin')}
 				<a
 					href="/events/{data.event.id}/materials/new"
-					class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+					class="px-4 py-2 bg-success text-white rounded-md hover:bg-success-dark"
 				>
 					Neues Material hinzufügen
 				</a>
@@ -97,7 +97,7 @@
 							<div class="flex gap-2">
 								<button
 									type="submit"
-									class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+									class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover"
 								>
 									Speichern
 								</button>
@@ -124,13 +124,13 @@
 								<div class="flex gap-2">
 									<a
 										href="/events/{data.event.id}/materials/{m.id}/assign"
-										class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+										class="px-3 py-1 text-sm bg-success text-white rounded-md hover:bg-success-dark"
 									>
 										Eltern zuweisen
 									</a>
 									<button
 										onclick={() => (editingMaterialId = m.id)}
-										class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+										class="px-3 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary-hover"
 									>
 										Bearbeiten
 									</button>
@@ -150,7 +150,7 @@
 										<input type="hidden" name="id" value={m.id} />
 										<button
 											type="submit"
-											class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
+											class="px-3 py-1 text-sm bg-error text-white rounded-md hover:bg-error-dark"
 										>
 											Löschen
 										</button>

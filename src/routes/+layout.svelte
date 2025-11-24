@@ -18,7 +18,7 @@
 
 <div class="min-h-screen flex flex-col">
 	{#if data.user}
-		<nav class="bg-gray-800 text-white p-4">
+		<nav class="p-4">
 			<div class="container mx-auto flex justify-between items-center">
 				<div class="flex items-center gap-6">
 					<div class="text-xl font-bold">Klasse 1/2B</div>
@@ -26,10 +26,10 @@
 						<span class="font-semibold">{data.user.name}</span>
 					</div>
 					<div class="hidden md:flex gap-4">
-						<a href="/events" class="hover:text-gray-300">Veranstaltungen</a>
+						<a href="/events" class="hover:text-gray-500">Veranstaltungen</a>
 						{#if data.user.roles?.includes('admin')}
-							<a href="/users" class="hover:text-gray-300">Benutzer</a>
-							<a href="/audit-log" class="hover:text-gray-300">Protokoll</a>
+							<a href="/users" class="hover:text-gray-500">Benutzer</a>
+							<a href="/audit-log" class="hover:text-gray-500">Protokoll</a>
 						{/if}
 					</div>
 				</div>
@@ -37,7 +37,7 @@
 					<button
 						type="button"
 						onclick={toggleMenu}
-						class="md:hidden p-2 hover:bg-gray-700 rounded-md"
+						class="md:hidden p-2 hover:bg-gray-200 rounded-md"
 						aria-label="Menu"
 					>
 						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,9 +59,7 @@
 						</svg>
 					</button>
 					<form method="POST" action="/auth/logout" class="hidden md:block">
-						<button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md">
-							Abmelden
-						</button>
+						<button type="submit" class="text-error hover:text-error-dark"> Abmelden </button>
 					</form>
 				</div>
 			</div>
@@ -71,12 +69,12 @@
 						<span class="font-semibold">{data.user.name}</span>
 					</div>
 					<div class="flex flex-col gap-4">
-						<a href="/events" onclick={toggleMenu} class="hover:text-gray-300 py-2"
+						<a href="/events" onclick={toggleMenu} class="hover:text-gray-500 py-2"
 							>Veranstaltungen</a
 						>
 						{#if data.user.roles?.includes('admin')}
-							<a href="/users" onclick={toggleMenu} class="hover:text-gray-300 py-2">Benutzer</a>
-							<a href="/audit-log" onclick={toggleMenu} class="hover:text-gray-300 py-2"
+							<a href="/users" onclick={toggleMenu} class="hover:text-gray-500 py-2">Benutzer</a>
+							<a href="/audit-log" onclick={toggleMenu} class="hover:text-gray-500 py-2"
 								>Protokoll</a
 							>
 						{/if}
@@ -84,7 +82,7 @@
 							<button
 								type="submit"
 								onclick={toggleMenu}
-								class="w-full text-left px-2 py-2 bg-red-600 hover:bg-red-700 rounded-md"
+								class="w-full text-left px-2 py-2 text-white bg-error hover:bg-error-dark rounded-md"
 							>
 								Abmelden
 							</button>
@@ -122,3 +120,9 @@
 		</div>
 	</footer>
 </div>
+
+<style>
+	nav {
+		background-color: #fbf2ee;
+	}
+</style>
