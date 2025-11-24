@@ -38,13 +38,13 @@ You can preview the production build with `npm run preview`.
 ## Deploy
 
 Push to GitHub.
-Copy docker-compore.yml to server.
+Copy docker-compose.yml to server.
 
 On server:
 
 ```sh
-$ docker pull docker pull ghcr.io/langalex/henry:main-***
-$ docker-compose up -d # start server
+$ docker compose pull
+$ docker compose up -d
 ```
 
 Migrate database:
