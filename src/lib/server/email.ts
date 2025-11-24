@@ -32,7 +32,7 @@ export async function sendLoginLink(email: string, token: string) {
 			.route('outgoing')
 			.from('Klasse 1/2b <me+henry@langalex.org>')
 			.to(email)
-			.subject('Login-Link')
+			.subject('Anmelde-Link')
 			.text(`Klicke auf diesen Link, um dich anzumelden: ${loginUrl}`)
 			.html(
 				`

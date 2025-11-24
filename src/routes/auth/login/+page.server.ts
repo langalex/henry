@@ -25,6 +25,6 @@ export const actions = {
 		const token = await auth.createEmailVerificationToken(user.id);
 		await email.sendLoginLink(user.email, token);
 
-		return { success: true, message: 'Login-Link wurde per E-Mail gesendet' };
+		return { success: true, message: 'Anmelde-Link wurde per E-Mail gesendet' };
 	}
 };

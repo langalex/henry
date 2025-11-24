@@ -39,7 +39,7 @@ export const actions = {
 
 		return {
 			success: true,
-			message: 'Registrierung erfolgreich. Bitte prüfen Sie Ihre E-Mails für den Login-Link.'
+			message: 'Registrierung erfolgreich. Bitte prüfe deine E-Mails für den Anmelde-Link.'
 		};
 	}
 };
