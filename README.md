@@ -35,4 +35,26 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deploy
+
+Push to GitHub.
+Copy docker-compore.yml to server.
+
+On server:
+
+```sh
+$ docker pull docker pull ghcr.io/langalex/henry:main-***
+$ docker-compose up -d # start server
+```
+
+Migrate database:
+
+Open shell in container:
+
+```sh
+$ docker exec -ti  "$(docker ps --format "table {{.ID}}\t{{.Names}}" | grep "henry" | awk '{print $1}')" sh
+```
+
+```sh
+$ npm run db:push
+```

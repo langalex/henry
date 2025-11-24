@@ -1,5 +1,9 @@
 services:
   app:
-    build: .
+    image: ghcr.io/langalex/henry:latest
     ports:
       - "4000:4000"
+    volumes:
+      - db:/db
+volumes:
+  db:
