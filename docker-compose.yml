@@ -1,6 +1,9 @@
 services:
   app:
     image: ghcr.io/langalex/henry:latest
+    environment:
+      - LETTERMINT_API_TOKEN=""
+      - PUBLIC_APP_URL=""
     ports:
       - "4000:4000"
     volumes:
