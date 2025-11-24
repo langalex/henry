@@ -7,7 +7,7 @@ import { randomUUID } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	requireAdmin(event);
+	const currentUser = requireAdmin(event);
 	
 	const userId = event.params.id;
 	const [targetUser] = await db.select().from(user).where(eq(user.id, userId));
@@ -25,7 +25,8 @@ export const load: PageServerLoad = async (event) => {
 		user: {
 			...targetUser,
 			roles: roles.map((r) => r.role)
-		}
+		},
+		currentUserId: currentUser.id
 	};
 };
 

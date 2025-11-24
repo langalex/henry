@@ -4,7 +4,7 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	const availableRoles = ['admin', 'parent'];
+	const availableRoles = ['admin'];
 	let selectedRoles = $state<string[]>(data.user.roles || []);
 </script>
 
@@ -20,9 +20,7 @@
 	<form method="POST" action="?/update" use:enhance>
 		<div class="bg-white rounded-lg shadow-md p-6 space-y-6">
 			<div>
-				<label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-					Name *
-				</label>
+				<label for="name" class="block text-sm font-medium text-gray-700 mb-2"> Name * </label>
 				<input
 					type="text"
 					id="name"
@@ -34,9 +32,7 @@
 			</div>
 
 			<div>
-				<label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-					E-Mail *
-				</label>
+				<label for="email" class="block text-sm font-medium text-gray-700 mb-2"> E-Mail * </label>
 				<input
 					type="email"
 					id="email"
@@ -57,6 +53,12 @@
 								name="roles"
 								value={role}
 								bind:group={selectedRoles}
+								readonly={data.currentUserId === data.user.id}
+								onclick={(e) => {
+									if (data.currentUserId === data.user.id) {
+										e.preventDefault();
+									}
+								}}
 								class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
 							/>
 							<span class="ml-2 text-sm text-gray-700">{role}</span>
@@ -82,21 +84,23 @@
 		</div>
 	</form>
 
-	<div class="mt-8 pt-8 border-t border-gray-200">
-		<form method="POST" action="?/delete" use:enhance>
-			<button
-				type="submit"
-				class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-				onclick={(e) => {
-					if (!confirm('Möchten Sie diesen Benutzer wirklich löschen?')) {
-						e.preventDefault();
-					}
-				}}
-			>
-				Benutzer löschen
-			</button>
-		</form>
-	</div>
+	{#if data.currentUserId !== data.user.id}
+		<div class="mt-8 pt-8 border-t border-gray-200">
+			<form method="POST" action="?/delete" use:enhance>
+				<button
+					type="submit"
+					class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+					onclick={(e) => {
+						if (!confirm('Möchten Sie diesen Benutzer wirklich löschen?')) {
+							e.preventDefault();
+						}
+					}}
+				>
+					Benutzer löschen
+				</button>
+			</form>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -104,4 +108,3 @@
 		min-height: 100vh;
 	}
 </style>
-
