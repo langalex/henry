@@ -1,0 +1,41 @@
+{
+	"name": "henry",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"NODE_VERSION": "22"
+		}
+	},
+	"features": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"svelte.svelte-vscode",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"ms-playwright.playwright",
+				"streetsidesoftware.code-spell-checker"
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"eslint.validate": ["javascript", "svelte", "typescript"],
+				"svelte.enable-ts-plugin": true
+			}
+		}
+	},
+	"remoteUser": "node",
+	"containerUser": "node",
+	"mounts": [
+		"type=volume,source=henry-vscode-server,target=/home/node/.vscode-server;external=false",
+		"type=volume,source=henry-npm-cache,target=/home/node/.npm;external=false",
+		"type=volume,source=henry-ms-playwright-cache,target=/home/node/.cache/ms-playwright;external=false"
+	],
+	"runArgs": ["--init"],
+	"forwardPorts": [5173, 4173],
+	"postCreateCommand": "sudo chown -R node:node /home/node/.cache && corepack enable && npm install --frozen-lockfile",
+	"postStartCommand": "npx playwright install --with-deps chromium",
+	"portsAttributes": {
+		"5173": { "label": "Vite Dev Server" },
+		"4173": { "label": "Vite Preview" }
+	}
+}
