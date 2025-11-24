@@ -44,7 +44,6 @@ export async function sendLoginLink(email: string, token: string) {
 			.send();
 	} catch (error) {
 		console.error('Failed to send email:', error);
-		console.error('API Token:', apiToken);
 		throw new Error('Failed to send email');
 	}
 }
