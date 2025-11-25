@@ -59,14 +59,14 @@
 										<div class="flex flex-wrap gap-2">
 											{#each u.roles as role (role)}
 												<span
-													class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light text-primary-dark"
+													class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light text-text"
 												>
 													{role}
 												</span>
 											{/each}
 										</div>
 									{:else}
-										<span class="text-gray-400">Keine Rollen</span>
+										<span class="text-gray-600">Keine Rollen</span>
 									{/if}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
