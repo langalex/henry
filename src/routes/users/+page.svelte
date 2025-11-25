@@ -48,7 +48,7 @@
 						</tr>
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-200">
-						{#each data.users as u (u.id)}
+						{#each data.users.sort((a, b) => a.name.localeCompare(b.name)) as u (u.id)}
 							<tr class="hover:bg-gray-50">
 								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 									{u.name}
@@ -57,7 +57,7 @@
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{#if u.roles && u.roles.length > 0}
 										<div class="flex flex-wrap gap-2">
-											{#each u.roles as role}
+											{#each u.roles as role (role)}
 												<span
 													class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light text-primary-dark"
 												>
