@@ -85,7 +85,7 @@
 							<button
 								type="submit"
 								onclick={toggleMenu}
-								class="w-full text-left px-2 py-2 text-white bg-error hover:bg-error-dark rounded-md"
+								class="text-left px-2 py-2 text-error hover:text-error-dark"
 							>
 								Abmelden
 							</button>
