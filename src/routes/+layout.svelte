@@ -119,5 +119,8 @@
 <style>
 	nav {
 		background-color: #fbf2ee;
+		position: sticky;
+		top: 0;
+		z-index: 50;
 	}
 </style>
