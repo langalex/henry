@@ -97,20 +97,12 @@
 		{@render children()}
 	</main>
 
-	<footer class="bg-gray-100 text-gray-500 p-4 mt-auto">
+	<footer class="bg-gray-100 text-gray-600 text-xs p-4 mt-auto">
 		<div class="container mx-auto flex justify-between">
 			<div>&copy; 2025 <a href="mailto:alex@langs.berlin">Alexander Lang</a></div>
 			<div>
-				Gehostet in Deutschland bei <a
-					href="https://upcloud.com"
-					target="_blank"
-					rel="noopener noreferrer">upcloud.com</a
-				>
-			</div>
-			<div>
-				Emails via <a href="https://lettermint.co" target="_blank" rel="noopener noreferrer"
-					>Lettermint</a
-				>
+				<a href="https://upcloud.com" target="_blank" rel="noopener noreferrer">Hosting</a> /
+				<a href="https://lettermint.co" target="_blank" rel="noopener noreferrer">Emails</a> in DE
 			</div>
 			<div>
 				<a href="https://github.com/langalex/henry/" target="_blank" rel="noopener noreferrer">
