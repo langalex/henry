@@ -106,32 +106,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	updateEvent: async ({ request, params, locals }) => {
-		requireAdmin({ locals } as any);
-		const data = await request.formData();
-		const title = data.get('title')?.toString();
-		const description = data.get('description')?.toString() || '';
-		const date = data.get('date')?.toString();
-		const time = data.get('time')?.toString();
-
-		if (!title || !date || !time) {
-			return fail(400, { error: 'Alle Felder sind erforderlich' });
-		}
-
-		try {
-			await db.update(event).set({ title, description, date, time }).where(eq(event.id, params.id));
-			await logAuditEvent({ request, locals } as any, 'update', {
-				resourceType: 'event',
-				resourceId: params.id,
-				resourceName: title,
-				details: { title, date, time }
-			});
-			return { success: true };
-		} catch (error) {
-			return fail(500, { error: 'Fehler beim Aktualisieren des Events' });
-		}
-	},
-
 	deleteEvent: async ({ request, params, locals }) => {
 		requireAdmin({ locals } as any);
 		const evt = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
