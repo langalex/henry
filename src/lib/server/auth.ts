@@ -11,6 +11,20 @@ const EMAIL_TOKEN_EXPIRES_IN = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
 
+export const ALLOWED_ROLES = ['admin'] as const;
+
+export function validateRoles(roles: string[]): string[] {
+	const invalidRoles = roles.filter(
+		(role) => !ALLOWED_ROLES.includes(role as (typeof ALLOWED_ROLES)[number])
+	);
+	if (invalidRoles.length > 0) {
+		throw new Error(
+			`Invalid roles: ${invalidRoles.join(', ')}. Allowed roles: ${ALLOWED_ROLES.join(', ')}`
+		);
+	}
+	return roles;
+}
+
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(18));
 	const token = encodeBase64url(bytes);
@@ -150,6 +164,7 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function createUser(email: string, name: string, roles: string[] = []) {
+	const validatedRoles = validateRoles(roles);
 	const userId = randomUUID();
 	await db.insert(table.user).values({
 		id: userId,
@@ -157,9 +172,9 @@ export async function createUser(email: string, name: string, roles: string[] = 
 		name
 	});
 
-	if (roles.length > 0) {
+	if (validatedRoles.length > 0) {
 		await db.insert(table.userRole).values(
-			roles.map((role) => ({
+			validatedRoles.map((role) => ({
 				id: randomUUID(),
 				userId,
 				role
@@ -176,6 +191,9 @@ export async function getUserCount() {
 }
 
 export async function addUserRole(userId: string, role: string) {
+	if (!ALLOWED_ROLES.includes(role as (typeof ALLOWED_ROLES)[number])) {
+		throw new Error(`Invalid role: ${role}`);
+	}
 	await db.insert(table.userRole).values({
 		id: randomUUID(),
 		userId,

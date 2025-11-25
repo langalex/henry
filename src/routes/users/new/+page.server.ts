@@ -19,7 +19,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const name = data.get('name')?.toString();
 		const email = data.get('email')?.toString();
-		const roles = data.getAll('roles').map((r) => r.toString());
+		const rawRoles = data.getAll('roles').map((r) => r.toString());
 
 		if (!name || !email) {
 			return fail(400, { error: 'Name und E-Mail sind erforderlich' });
@@ -31,11 +31,15 @@ export const actions: Actions = {
 		}
 
 		try {
+			const roles = auth.validateRoles(rawRoles);
 			await auth.createUser(email, name, roles);
 			throw redirect(303, '/users');
 		} catch (error) {
 			if (error && typeof error === 'object' && 'status' in error) {
 				throw error;
+			}
+			if (error instanceof Error && error.message.includes('Invalid roles')) {
+				return fail(400, { error: 'Ungültige Rollen angegeben' });
 			}
 			return fail(500, { error: 'Fehler beim Erstellen des Benutzers' });
 		}

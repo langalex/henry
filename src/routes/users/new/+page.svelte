@@ -4,7 +4,7 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	const availableRoles = ['admin', 'parent'];
+	const availableRoles = ['admin'];
 	let selectedRoles = $state<string[]>([]);
 </script>
 

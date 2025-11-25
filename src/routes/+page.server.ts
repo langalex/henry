@@ -31,7 +31,7 @@ export const actions = {
 		}
 
 		const userCount = await auth.getUserCount();
-		const roles = userCount === 0 ? ['parent', 'admin'] : [];
+		const roles = userCount === 0 ? ['admin'] : [];
 
 		const userId = await auth.createUser(emailAddress, name, roles);
 		const token = await auth.createEmailVerificationToken(userId);
