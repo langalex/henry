@@ -5,7 +5,7 @@
 	let error = $state<string | null>(null);
 </script>
 
-<div class="max-w-md mx-auto mt-8">
+<div class="max-w-md mx-auto mt-8 px-4">
 	<h1 class="text-2xl font-bold mb-4">Klasse 1/2B</h1>
 	<p class="text-gray-600 mb-4">
 		Bitte gib deine E-Mail-Adresse ein, um einen Anmelde-Link zu erhalten.
