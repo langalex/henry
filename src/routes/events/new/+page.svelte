@@ -63,7 +63,7 @@
 				/>
 			</div>
 		</div>
-		<div class="flex gap-4">
+		<div class="flex gap-4 flex-col md:flex-row">
 			<button
 				type="submit"
 				class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
@@ -72,7 +72,7 @@
 			</button>
 			<a
 				href="/events"
-				class="px-6 py-2 bg-secondary-light text-text rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+				class="px-6 py-2 bg-secondary-light text-center rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
 			>
 				Abbrechen
 			</a>

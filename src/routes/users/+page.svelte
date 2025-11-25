@@ -13,7 +13,7 @@
 			href="/users/new"
 			class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
 		>
-			Neuen Benutzer erstellen
+			Benutzer hinzufügen
 		</a>
 	</div>
 
@@ -21,7 +21,7 @@
 		{#if data.users.length === 0}
 			<p class="text-gray-600">Keine Benutzer vorhanden.</p>
 		{:else}
-			<div class="bg-white rounded-lg shadow-md overflow-hidden">
+			<div class="bg-white rounded-lg shadow-md overflow-x-auto">
 				<table class="min-w-full divide-y divide-gray-200">
 					<thead class="bg-gray-50">
 						<tr>

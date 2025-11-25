@@ -40,7 +40,7 @@
 					href="/events/{data.event.id}/materials/new"
 					class="px-4 py-2 bg-success text-white rounded-md hover:bg-success-dark"
 				>
-					Neues Material hinzufügen
+					Material hinzufügen
 				</a>
 			{/if}
 		</div>

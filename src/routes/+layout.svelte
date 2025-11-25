@@ -2,6 +2,7 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import type { LayoutData } from './$types';
+	import { resolve } from '$app/paths';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
 
@@ -21,7 +22,9 @@
 		<nav class="p-4">
 			<div class="container mx-auto flex justify-between items-center">
 				<div class="flex items-center gap-6">
-					<div class="text-xl font-bold">Klasse 1/2B</div>
+					<div class="text-xl font-bold">
+						<a href={resolve('/')} class="hover:text-gray-500">Klasse 1/2B</a>
+					</div>
 					<div class="hidden md:block">
 						<span class="font-semibold">{data.user.name}</span>
 					</div>

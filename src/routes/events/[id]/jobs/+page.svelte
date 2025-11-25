@@ -40,7 +40,7 @@
 					href="/events/{data.event.id}/jobs/new"
 					class="px-4 py-2 bg-success text-white rounded-md hover:bg-success-dark"
 				>
-					Neue Aufgabe hinzufügen
+					Aufgabe hinzufügen
 				</a>
 			{/if}
 		</div>
@@ -185,11 +185,11 @@
 									</div>
 								{/if}
 							</div>
-							<div class="flex gap-2 flex-col md:flex-row">
+							<div class="flex gap-2">
 								{#if data.user?.roles?.includes('admin')}
 									<a
 										href="/events/{data.event.id}/jobs/{j.id}/assign"
-										class="px-3 py-1 text-sm bg-success text-white rounded-md hover:bg-success-dark"
+										class="px-3 py-1 text-sm bg-success text-white rounded-md hover:bg-success-dark text-center"
 									>
 										Eltern zuweisen
 									</a>
