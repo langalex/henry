@@ -18,7 +18,10 @@
 		<h1 class="text-2xl font-bold mb-4">Ersten Benutzer erstellen</h1>
 
 		{#if message}
-			<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+			<div
+				data-testid="message"
+				class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
+			>
 				{message}
 			</div>
 		{/if}
@@ -46,7 +49,7 @@
 			}}
 		>
 			<div class="mb-4">
-				<label for="name" class="block text-sm font-medium mb-2"> Name </label>
+				<label for="name" class="block text-sm font-medium mb-2">Name</label>
 				<input
 					type="text"
 					id="name"
@@ -57,7 +60,7 @@
 			</div>
 
 			<div class="mb-4">
-				<label for="email" class="block text-sm font-medium mb-2"> E-Mail </label>
+				<label for="email" class="block text-sm font-medium mb-2">E-Mail</label>
 				<input
 					type="email"
 					id="email"
@@ -70,9 +73,8 @@
 			<button
 				type="submit"
 				class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-hover"
+				>Registrieren</button
 			>
-				Registrieren
-			</button>
 		</form>
 	</div>
 {/if}

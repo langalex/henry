@@ -3,6 +3,7 @@ import { env } from '$env/dynamic/public';
 import { env as privateEnv } from '$env/dynamic/private';
 import { Lettermint } from 'lettermint';
 const apiToken = privateEnv.LETTERMINT_API_TOKEN;
+const testing = import.meta.env.MODE === 'test';
 
 function createTransporter(): Lettermint {
 	if (!apiToken) {
@@ -22,6 +23,10 @@ export async function sendLoginLink(email: string, token: string) {
 		console.log(`To: ${email}`);
 		console.log(`Link: ${loginUrl}`);
 		console.log('==================');
+		return;
+	}
+
+	if (testing) {
 		return;
 	}
 
