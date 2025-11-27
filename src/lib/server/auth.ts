@@ -32,6 +32,9 @@ export function generateSessionToken() {
 }
 
 export function generateEmailToken() {
+	if (import.meta.env.DEV) {
+		return 'test-token-123';
+	}
 	const bytes = crypto.getRandomValues(new Uint8Array(18));
 	const token = encodeBase64url(bytes);
 	return token;

@@ -1,9 +1,7 @@
-import { dev } from '$app/environment';
 import { env } from '$env/dynamic/public';
 import { env as privateEnv } from '$env/dynamic/private';
 import { Lettermint } from 'lettermint';
 const apiToken = privateEnv.LETTERMINT_API_TOKEN;
-const testing = import.meta.env.MODE === 'test';
 
 function createTransporter(): Lettermint {
 	if (!apiToken) {
@@ -18,15 +16,11 @@ export async function sendLoginLink(email: string, token: string) {
 	const baseUrl = env.PUBLIC_APP_URL || 'http://localhost:5173';
 	const loginUrl = `${baseUrl}/auth/verify?token=${token}`;
 
-	if (dev) {
+	if (import.meta.env.DEV) {
 		console.log('=== LOGIN LINK ===');
 		console.log(`To: ${email}`);
 		console.log(`Link: ${loginUrl}`);
 		console.log('==================');
-		return;
-	}
-
-	if (testing) {
 		return;
 	}
 

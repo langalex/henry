@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 import * as schema from '../src/lib/server/db/schema';
 
 async function globalSetup() {
-	const databaseUrl = process.env.DATABASE_URL || 'test.db';
+	const databaseUrl = 'test.db';
 	const client = new Database(databaseUrl);
 	const db = drizzle(client, { schema });
 

@@ -9,4 +9,4 @@ alwaysApply: true
 
 # e2e tests
 
-- run tests via `npm run test:e2e [filename]`
+- run tests via `npm run test:e2e [filename]` and fix any issues
