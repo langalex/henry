@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+
+# Testing
+
+- use labels to access form elements where possible
+- add data-testid attributes to elements that need to be found in tests and use `getByTestId` in tests
+
+# e2e tests
+
+- run tests via `npm run test:e2e [filename]` and fix any issues
