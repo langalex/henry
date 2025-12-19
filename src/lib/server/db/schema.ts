@@ -37,6 +37,7 @@ export const event = sqliteTable('event', {
 	description: text('description'),
 	date: text('date').notNull(),
 	time: text('time').notNull(),
+	contributionsListName: text('contributions_list_name'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 });
 
@@ -81,6 +82,19 @@ export const materialAssignment = sqliteTable('material_assignment', {
 		.references(() => user.id, { onDelete: 'cascade' })
 });
 
+export const contribution = sqliteTable('contribution', {
+	id: text('id').primaryKey(),
+	eventId: text('event_id')
+		.notNull()
+		.references(() => event.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	title: text('title').notNull(),
+	description: text('description'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+});
+
 export const auditLog = sqliteTable('audit_log', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
@@ -103,6 +117,7 @@ export const userRelations = relations(user, ({ many }) => ({
 	emailVerificationTokens: many(emailVerificationToken),
 	jobAssignments: many(jobAssignment),
 	materialAssignments: many(materialAssignment),
+	contributions: many(contribution),
 	auditLogs: many(auditLog)
 }));
 
@@ -115,7 +130,8 @@ export const userRoleRelations = relations(userRole, ({ one }) => ({
 
 export const eventRelations = relations(event, ({ many }) => ({
 	jobs: many(job),
-	materials: many(material)
+	materials: many(material),
+	contributions: many(contribution)
 }));
 
 export const jobRelations = relations(job, ({ one, many }) => ({
@@ -156,6 +172,17 @@ export const materialAssignmentRelations = relations(materialAssignment, ({ one 
 	})
 }));
 
+export const contributionRelations = relations(contribution, ({ one }) => ({
+	event: one(event, {
+		fields: [contribution.eventId],
+		references: [event.id]
+	}),
+	user: one(user, {
+		fields: [contribution.userId],
+		references: [user.id]
+	})
+}));
+
 export const auditLogRelations = relations(auditLog, ({ one }) => ({
 	user: one(user, {
 		fields: [auditLog.userId],
@@ -172,6 +199,7 @@ export type Job = typeof job.$inferSelect;
 export type Material = typeof material.$inferSelect;
 export type JobAssignment = typeof jobAssignment.$inferSelect;
 export type MaterialAssignment = typeof materialAssignment.$inferSelect;
+export type Contribution = typeof contribution.$inferSelect;
 export type NewUser = typeof user.$inferInsert;
 export type NewUserRole = typeof userRole.$inferInsert;
 export type NewEmailVerificationToken = typeof emailVerificationToken.$inferInsert;
@@ -180,5 +208,6 @@ export type NewJob = typeof job.$inferInsert;
 export type NewMaterial = typeof material.$inferInsert;
 export type NewJobAssignment = typeof jobAssignment.$inferInsert;
 export type NewMaterialAssignment = typeof materialAssignment.$inferInsert;
+export type NewContribution = typeof contribution.$inferInsert;
 export type AuditLog = typeof auditLog.$inferSelect;
 export type NewAuditLog = typeof auditLog.$inferInsert;

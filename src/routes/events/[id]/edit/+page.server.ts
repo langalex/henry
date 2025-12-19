@@ -28,18 +28,29 @@ export const actions: Actions = {
 		const description = data.get('description')?.toString() || '';
 		const date = data.get('date')?.toString();
 		const time = data.get('time')?.toString();
+		const contributionsListName = data.get('contributionsListName')?.toString() || null;
 
 		if (!title || !date || !time) {
 			return fail(400, { error: 'Alle Felder sind erforderlich' });
 		}
 
 		try {
-			await db.update(event).set({ title, description, date, time }).where(eq(event.id, params.id));
+			const [oldEvent] = await db.select().from(event).where(eq(event.id, params.id)).limit(1);
+			await db
+				.update(event)
+				.set({ title, description, date, time, contributionsListName })
+				.where(eq(event.id, params.id));
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'event',
 				resourceId: params.id,
 				resourceName: title,
-				details: { title, date, time }
+				details: {
+					title,
+					date,
+					time,
+					contributionsListName,
+					previousContributionsListName: oldEvent?.contributionsListName
+				}
 			});
 			throw redirect(303, `/events/${params.id}`);
 		} catch (err) {

@@ -5,10 +5,11 @@ import {
 	material,
 	jobAssignment,
 	materialAssignment,
+	contribution,
 	user
 } from '$lib/server/db/schema';
 import { eq, and, inArray } from 'drizzle-orm';
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 import { randomUUID } from 'crypto';
@@ -22,9 +23,22 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(404, 'Event nicht gefunden');
 	}
 
-	const [jobs, materials] = await Promise.all([
+	const [jobs, materials, contributions] = await Promise.all([
 		db.select().from(job).where(eq(job.eventId, params.id)),
-		db.select().from(material).where(eq(material.eventId, params.id))
+		db.select().from(material).where(eq(material.eventId, params.id)),
+		db
+			.select({
+				id: contribution.id,
+				eventId: contribution.eventId,
+				userId: contribution.userId,
+				title: contribution.title,
+				description: contribution.description,
+				createdAt: contribution.createdAt,
+				userName: user.name
+			})
+			.from(contribution)
+			.innerJoin(user, eq(contribution.userId, user.id))
+			.where(eq(contribution.eventId, params.id))
 	]);
 
 	const jobIds = jobs.map((j) => j.id);
@@ -99,8 +113,18 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		};
 	});
 
+	const contributionsWithUser = contributions.map((c) => ({
+		...c,
+		canEdit: currentUser.id === c.userId || currentUser.roles?.includes('admin')
+	}));
+
 	return {
-		event: { ...evt[0], jobs: jobsWithAssignments, materials: materialsWithAssignments },
+		event: {
+			...evt[0],
+			jobs: jobsWithAssignments,
+			materials: materialsWithAssignments,
+			contributions: contributionsWithUser
+		},
 		user: currentUser
 	};
 };
@@ -127,8 +151,11 @@ export const actions: Actions = {
 				resourceName: eventTitle,
 				details: { title: eventTitle }
 			});
-			return { success: true };
-		} catch (error) {
+			throw redirect(303, '/events');
+		} catch (err) {
+			if (err && typeof err === 'object' && 'status' in err) {
+				throw err;
+			}
 			return fail(500, { error: 'Fehler beim Löschen des Events' });
 		}
 	},
@@ -180,7 +207,7 @@ export const actions: Actions = {
 				details: { userId: currentUser.id, userName: currentUser.name },
 				targetUserId: currentUser.id,
 				targetUserName: currentUser.name,
-				targetUserEmail: currentUser.email || null
+				targetUserEmail: currentUser.email || undefined
 			});
 
 			return { success: true };
@@ -210,7 +237,7 @@ export const actions: Actions = {
 				details: { userId: currentUser.id, userName: currentUser.name },
 				targetUserId: currentUser.id,
 				targetUserName: currentUser.name,
-				targetUserEmail: currentUser.email || null
+				targetUserEmail: currentUser.email || undefined
 			});
 			return { success: true };
 		} catch (err) {
@@ -265,7 +292,7 @@ export const actions: Actions = {
 				details: { userId: currentUser.id, userName: currentUser.name },
 				targetUserId: currentUser.id,
 				targetUserName: currentUser.name,
-				targetUserEmail: currentUser.email || null
+				targetUserEmail: currentUser.email || undefined
 			});
 
 			return { success: true };
@@ -304,7 +331,7 @@ export const actions: Actions = {
 				details: { userId: currentUser.id, userName: currentUser.name },
 				targetUserId: currentUser.id,
 				targetUserName: currentUser.name,
-				targetUserEmail: currentUser.email || null
+				targetUserEmail: currentUser.email || undefined
 			});
 			return { success: true };
 		} catch (err) {

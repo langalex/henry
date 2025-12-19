@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: any } = $props();
@@ -17,9 +16,15 @@
 		});
 	}
 
-	async function handleDelete() {
-		await invalidateAll();
-		await goto('/events');
+	function formatContributionDate(date: Date | number) {
+		const d = typeof date === 'number' ? new Date(date) : date;
+		return d.toLocaleString('de-DE', {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 	}
 </script>
 
@@ -56,7 +61,6 @@
 							return async ({ update }) => {
 								if (confirm('Möchten Sie diese Veranstaltung wirklich löschen?')) {
 									await update();
-									await handleDelete();
 								}
 							};
 						}}
@@ -251,6 +255,54 @@
 				</div>
 			{/if}
 		</div>
+	</div>
+
+	<div class="mt-8">
+		<div class="flex justify-between items-center mb-4">
+			<h2 class="text-2xl font-semibold">
+				{data.event.contributionsListName || 'Beiträge'}
+			</h2>
+			<a
+				href="/events/{data.event.id}/contributions/new"
+				class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover text-sm"
+				data-testid="manage-contributions-link"
+			>
+				Beitrag hinzufügen
+			</a>
+		</div>
+		{#if data.event.contributions && data.event.contributions.length === 0}
+			<p class="text-gray-600 text-sm">Noch keine Beiträge vorhanden.</p>
+		{:else if data.event.contributions}
+			<div class="space-y-3">
+				{#each data.event.contributions as c (c.id)}
+					<div class="p-4 bg-gray-50 rounded-md" data-testid={`contribution-${c.id}`}>
+						<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+							<div class="flex-1">
+								<h3 class="font-medium mb-2">{c.title}</h3>
+								{#if c.description}
+									<p class="text-sm text-gray-600 mb-2">{c.description}</p>
+								{/if}
+								<div class="flex gap-4 text-xs text-gray-500">
+									<span>Von: {c.userName}</span>
+									<span>Am: {formatContributionDate(c.createdAt)}</span>
+								</div>
+							</div>
+							{#if c.canEdit}
+								<div class="flex gap-2">
+									<a
+										href="/events/{data.event.id}/contributions/{c.id}/edit"
+										class="px-3 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary-hover"
+										data-testid={`edit-contribution-${c.id}`}
+									>
+										Bearbeiten
+									</a>
+								</div>
+							{/if}
+						</div>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
 
