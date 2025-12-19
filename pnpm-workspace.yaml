@@ -1,0 +1,9 @@
+ignoredBuiltDependencies: []
+minimumReleaseAge: 10080 # 7 days
+minimumReleaseAgeExclude: []
+onlyBuiltDependencies:
+  - better-sqlite3
+  - esbuild
+strictDepBuilds: true
+trustPolicy: no-downgrade
+trustPolicyExclude: []

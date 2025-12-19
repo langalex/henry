@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
 	webServer: {
-		command: 'npm run build && npm run preview',
+		command: 'pnpm run build && pnpm run preview',
 		port: 4173,
 		env: {
 			DATABASE_URL: 'test.db',
