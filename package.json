@@ -56,5 +56,6 @@
 	"dependencies": {
 		"better-sqlite3": "^12.4.1",
 		"lettermint": "^1.4.0"
-	}
+	},
+	"packageManager": "pnpm@10.26.1"
 }
