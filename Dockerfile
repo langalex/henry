@@ -20,7 +20,7 @@ ENV DATABASE_URL=/db/local.db
 
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json /app/pnpm-lock.yaml ./
+COPY --from=builder /app/package*.json /app/pnpm-lock.yaml /app/.pnpm-workspace.yaml ./
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./
 COPY --from=builder /app/src/lib/server/db/schema.ts ./src/lib/server/db/
