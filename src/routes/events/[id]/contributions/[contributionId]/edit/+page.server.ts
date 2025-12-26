@@ -1,13 +1,13 @@
 import { db } from '$lib/server/db';
 import { event, contribution, user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { requireAuth } from '$lib/server/auth-helpers';
 import { logAuditEvent } from '$lib/server/audit-log';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	const currentUser = requireAuth({ locals } as any);
+	const currentUser = requireAuth({ locals } as RequestEvent);
 	const [contributionData] = await db
 		.select({
 			id: contribution.id,
@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 export const actions: Actions = {
 	updateContribution: async ({ request, params, locals }) => {
-		const currentUser = requireAuth({ locals } as any);
+		const currentUser = requireAuth({ locals } as RequestEvent);
 		const data = await request.formData();
 		const title = data.get('title')?.toString();
 		const description = data.get('description')?.toString() || '';
@@ -80,7 +80,7 @@ export const actions: Actions = {
 				.set({ title, description: description || null })
 				.where(eq(contribution.id, params.contributionId));
 
-			await logAuditEvent({ request, locals } as any, 'update', {
+			await logAuditEvent({ request, locals } as RequestEvent, 'update', {
 				resourceType: 'contribution',
 				resourceId: params.contributionId,
 				resourceName: title,
@@ -97,7 +97,7 @@ export const actions: Actions = {
 	},
 
 	deleteContribution: async ({ request, params, locals }) => {
-		const currentUser = requireAuth({ locals } as any);
+		const currentUser = requireAuth({ locals } as RequestEvent);
 
 		try {
 			const [contributionData] = await db
