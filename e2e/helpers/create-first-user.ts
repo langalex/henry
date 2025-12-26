@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 export async function createFirstUser(page: Page) {
 	// create first user
