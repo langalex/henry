@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:1-${NODE_VERSION}-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && sudo apt install -y xauth
+RUN apt update && sudo apt install -y xauth sqlite3
 
 # Ensure corepack/npm is available and set npm to version 10.9.0
 RUN corepack enable \

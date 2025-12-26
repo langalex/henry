@@ -5,8 +5,9 @@ import { fail } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 import { logAuditEvent } from '$lib/server/audit-log';
+import type { PageServerLoad, Actions } from './$types';
 
-export async function load(loadEvent) {
+export const load: PageServerLoad = async (loadEvent) => {
 	const user = requireAuth(loadEvent);
 	const events = await db.select().from(event).orderBy(asc(event.date), asc(event.time));
 
@@ -21,9 +22,9 @@ export async function load(loadEvent) {
 	);
 
 	return { events: eventsWithRelations, user };
-}
+};
 
-export const actions = {
+export const actions: Actions = {
 	createJob: async ({ request, locals }) => {
 		requireAdmin({ locals } as any);
 		const data = await request.formData();

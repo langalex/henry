@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { flushDatabase } from './global-setup';
+
+test.beforeEach(async () => {
+	await flushDatabase();
+});
 
 test('create first user', async ({ page }) => {
 	await page.goto('/');

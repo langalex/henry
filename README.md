@@ -1,22 +1,16 @@
-# sv
+# Henry
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This is a simple web app to manage events for a school class.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
+**Disclaimer:** this is a pet/toy project, almost entirely generated with AI. Don't try to judge my coding skills based on this or try to learn from this code base.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `pnpm install`, start a development server:
+This app is built using SvelteKit. It uses a SQLite database for storage.
+
+Install dependencies with `pnpm install`.
+
+Start a development server:
 
 ```sh
 pnpm run dev
@@ -27,7 +21,7 @@ pnpm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+To create a production version of the app:
 
 ```sh
 pnpm run build

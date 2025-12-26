@@ -14,6 +14,9 @@ export default defineConfig({
 			NODE_ENV: 'test'
 		}
 	},
+	timeout: 5000,
 	testDir: 'e2e',
+	workers: 1,
+	// reporter: 'html',
 	globalSetup: resolve(__dirname, 'e2e/global-setup.ts')
 });

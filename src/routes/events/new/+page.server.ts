@@ -4,13 +4,14 @@ import { fail, redirect } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import { requireAuth, requireAdmin } from '$lib/server/auth-helpers';
 import { logAuditEvent } from '$lib/server/audit-log';
+import type { PageServerLoad, Actions } from './$types';
 
-export async function load(loadEvent) {
+export const load: PageServerLoad = async (loadEvent) => {
 	const user = requireAuth(loadEvent);
 	return { user };
-}
+};
 
-export const actions = {
+export const actions: Actions = {
 	createEvent: async (actionEvent) => {
 		requireAdmin(actionEvent);
 		const data = await actionEvent.request.formData();

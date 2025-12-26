@@ -29,6 +29,20 @@
 			"when": 1763850100000,
 			"tag": "0003_add_resource_name_to_audit_log",
 			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "6",
+			"when": 1763850200000,
+			"tag": "0004_add_target_user_to_audit_log",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "6",
+			"when": 1763850300000,
+			"tag": "0005_add_contributions",
+			"breakpoints": true
 		}
 	]
 }

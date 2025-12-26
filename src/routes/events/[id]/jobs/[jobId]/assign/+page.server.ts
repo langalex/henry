@@ -95,8 +95,8 @@ export const actions: Actions = {
 				resourceName: jobData.title,
 				details: { userId, userName: userData?.name || '' },
 				targetUserId: userId,
-				targetUserName: userData?.name || null,
-				targetUserEmail: userData?.email || null
+				targetUserName: userData?.name ?? undefined,
+				targetUserEmail: userData?.email ?? undefined
 			});
 
 			return { success: true };
@@ -132,8 +132,8 @@ export const actions: Actions = {
 				resourceName: jobData.title,
 				details: { userId, userName: userData?.name || '' },
 				targetUserId: userId,
-				targetUserName: userData?.name || null,
-				targetUserEmail: userData?.email || null
+				targetUserName: userData?.name ?? undefined,
+				targetUserEmail: userData?.email ?? undefined
 			});
 
 			return { success: true };
