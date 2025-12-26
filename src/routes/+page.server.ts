@@ -1,8 +1,9 @@
 import { redirect, fail } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
 import * as email from '$lib/server/email';
+import type { PageServerLoad, Actions } from './$types';
 
-export async function load({ locals }) {
+export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
 		throw redirect(302, '/events');
 	}
@@ -13,9 +14,9 @@ export async function load({ locals }) {
 	}
 
 	throw redirect(302, '/auth/login');
-}
+};
 
-export const actions = {
+export const actions: Actions = {
 	signup: async ({ request }) => {
 		const data = await request.formData();
 		const emailAddress = data.get('email')?.toString();

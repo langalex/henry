@@ -1,7 +1,8 @@
 import { redirect, error } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
+import type { PageServerLoad } from './$types';
 
-export async function load({ url, cookies }) {
+export const load: PageServerLoad = async ({ url, cookies }) => {
 	const token = url.searchParams.get('token');
 
 	if (!token) {
@@ -19,4 +20,4 @@ export async function load({ url, cookies }) {
 	auth.setSessionTokenCookie({ cookies } as any, sessionToken, session.expiresAt);
 
 	throw redirect(302, '/events');
-}
+};
