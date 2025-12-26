@@ -31,24 +31,6 @@ You can preview the production build with `pnpm run preview`.
 
 ## Deploy
 
-Push to GitHub.
-Copy docker-compose.yml to server.
-
-On server:
-
-```sh
-$ docker compose pull
-$ docker compose up -d
-```
-
-Migrate database:
-
-Open shell in container:
-
-```sh
-$ docker exec -ti  "$(docker ps --format "table {{.ID}}\t{{.Names}}" | grep "henry" | awk '{print $1}')" sh
-```
-
-```sh
-$ pnpm run db:push
-```
+- install [kamal](https://kamal-deploy.org/) `gem install kamal`
+- add secrets: `cp .kamal/secrets.example .kamal/secrets` # edit .kamale/secrets
+- `kamal setup`
