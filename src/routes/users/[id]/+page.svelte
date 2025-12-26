@@ -5,6 +5,7 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const availableRoles = ['admin'];
+	// svelte-ignore state_referenced_locally
 	let selectedRoles = $state<string[]>(data.user.roles || []);
 </script>
 
