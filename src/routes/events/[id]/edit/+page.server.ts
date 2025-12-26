@@ -28,7 +28,7 @@ export const actions: Actions = {
 		const description = data.get('description')?.toString() || '';
 		const date = data.get('date')?.toString();
 		const time = data.get('time')?.toString();
-		const contributionsListName = data.get('contributionsListName')?.toString() || null;
+		const contributionsListName = data.get('contributionsListName')?.toString();
 
 		if (!title || !date || !time) {
 			return fail(400, { error: 'Alle Felder sind erforderlich' });
