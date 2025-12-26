@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		})
 		.from(contribution)
 		.innerJoin(user, eq(contribution.userId, user.id))
-		.where(eq(contribution.id, params.id))
+		.where(eq(contribution.id, params.contributionId))
 		.limit(1);
 
 	if (!contributionData) {
@@ -63,7 +63,7 @@ export const actions: Actions = {
 			const [contributionData] = await db
 				.select()
 				.from(contribution)
-				.where(eq(contribution.id, params.id))
+				.where(eq(contribution.id, params.contributionId))
 				.limit(1);
 
 			if (!contributionData) {
@@ -78,11 +78,11 @@ export const actions: Actions = {
 			await db
 				.update(contribution)
 				.set({ title, description: description || null })
-				.where(eq(contribution.id, params.id));
+				.where(eq(contribution.id, params.contributionId));
 
 			await logAuditEvent({ request, locals } as any, 'update', {
 				resourceType: 'contribution',
-				resourceId: params.id,
+				resourceId: params.contributionId,
 				resourceName: title,
 				details: { title, description, previousTitle: contributionData.title }
 			});
@@ -103,7 +103,7 @@ export const actions: Actions = {
 			const [contributionData] = await db
 				.select()
 				.from(contribution)
-				.where(eq(contribution.id, params.id))
+				.where(eq(contribution.id, params.contributionId))
 				.limit(1);
 
 			if (!contributionData) {
@@ -117,11 +117,11 @@ export const actions: Actions = {
 
 			const eventId = contributionData.eventId;
 
-			await db.delete(contribution).where(eq(contribution.id, params.id));
+			await db.delete(contribution).where(eq(contribution.id, params.contributionId));
 
 			await logAuditEvent({ request, locals } as any, 'delete', {
 				resourceType: 'contribution',
-				resourceId: params.id,
+				resourceId: params.contributionId,
 				resourceName: contributionData.title,
 				details: { title: contributionData.title }
 			});
