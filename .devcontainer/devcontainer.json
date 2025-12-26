@@ -32,8 +32,8 @@
 	],
 	"runArgs": ["--init"],
 	"forwardPorts": [5173, 4173],
-	"postCreateCommand": "sudo chown -R node:node /home/node/.cache && corepack enable && npm install --frozen-lockfile",
-	"postStartCommand": "npx playwright install --with-deps chromium",
+	"postCreateCommand": "sudo chown -R node:node /home/node/.cache && corepack enable && pnpm install --frozen-lockfile",
+	"postStartCommand": "pnpx playwright install --with-deps chromium",
 	"portsAttributes": {
 		"5173": { "label": "Vite Dev Server" },
 		"4173": { "label": "Vite Preview" }

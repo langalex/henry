@@ -7,13 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && sudo apt install -y xauth
 
-# Install Playwright dependencies (Chromium only for Vitest browser and e2e)
-RUN npx --yes playwright install-deps chromium \
-  && rm -rf /var/lib/apt/lists/*
-
 # Ensure corepack/npm is available and set npm to version 10.9.0
 RUN corepack enable \
-  && corepack prepare npm@10.9.0 --activate
+  && corepack prepare pnpm@10.26.1 --activate
+
+  # Install Playwright dependencies (Chromium only for Vitest browser and e2e)
+RUN pnpx  playwright install-deps chromium \
+&& rm -rf /var/lib/apt/lists/*
 
 # Create non-root workspace ownership for node user
 USER node

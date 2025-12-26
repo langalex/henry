@@ -3,13 +3,13 @@ FROM node:24-alpine AS builder
 WORKDIR /app
 ENV DATABASE_URL=/db/local.db
 
-COPY package*.json ./
-RUN npm ci
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY . .
 RUN mkdir /db
-RUN npm run prepare
-RUN npm run build
+RUN pnpm run prepare
+RUN pnpm run build
 
 FROM node:24-alpine AS runner
 
@@ -20,7 +20,7 @@ ENV DATABASE_URL=/db/local.db
 
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/package*.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./
 COPY --from=builder /app/src/lib/server/db/schema.ts ./src/lib/server/db/
