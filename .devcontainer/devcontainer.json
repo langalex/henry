@@ -31,11 +31,12 @@
 		"type=volume,source=henry-ms-playwright-cache,target=/home/node/.cache/ms-playwright;external=false"
 	],
 	"runArgs": ["--init"],
-	"forwardPorts": [5173, 4173],
+	"forwardPorts": [5173, 4173, 9323],
 	"postCreateCommand": "sudo chown -R node:node /home/node/.cache && corepack enable && pnpm install --frozen-lockfile",
 	"postStartCommand": "pnpx playwright install --with-deps chromium",
 	"portsAttributes": {
 		"5173": { "label": "Vite Dev Server" },
-		"4173": { "label": "Vite Preview" }
+		"4173": { "label": "Vite Preview" },
+		"9323": { "label": "Playwright web server" }
 	}
 }
