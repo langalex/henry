@@ -34,3 +34,7 @@ You can preview the production build with `pnpm run preview`.
 - install [kamal](https://kamal-deploy.org/) `gem install kamal`
 - add secrets: `cp .kamal/secrets.example .kamal/secrets` # edit .kamale/secrets
 - `kamal setup`
+
+## Server shell
+
+`kamal shell`
