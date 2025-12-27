@@ -102,7 +102,9 @@
 
 	<footer class="bg-gray-100 text-gray-600 text-xs p-4 mt-auto">
 		<div class="container mx-auto flex justify-between">
-			<div>&copy; 2025 <a href="mailto:alex@langs.berlin">Alexander Lang</a></div>
+			<div>
+				&copy; {new Date().getFullYear()} <a href="mailto:alex@langs.berlin">Alexander Lang</a>
+			</div>
 			<div>
 				<a href="https://upcloud.com" target="_blank" rel="noopener noreferrer">Hosting</a> /
 				<a href="https://lettermint.co" target="_blank" rel="noopener noreferrer">Emails</a> in DE
